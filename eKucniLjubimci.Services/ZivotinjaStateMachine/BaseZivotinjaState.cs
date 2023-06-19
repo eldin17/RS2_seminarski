@@ -59,6 +59,11 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             }
         }
 
+        public virtual async Task<List<string>> AllowedActionsInState()
+        {
+            return new List<string>();
+        }
+
         public virtual async Task<DtoZivotinja> Add(AddZivotinja request)
         {
             throw new Exception("Action Not Allowed :(");

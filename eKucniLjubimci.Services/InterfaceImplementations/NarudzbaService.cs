@@ -115,5 +115,12 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
             return await state.StripePayment(payment, narudzbaId, ct);
         }
+
+        public async Task<List<string>> AllowedActions(int narudzbaId)
+        {
+            var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
+            var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
+            return await state.AllowedActionsInState();
+        }
     }
 }

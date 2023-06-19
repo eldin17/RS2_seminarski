@@ -13,8 +13,7 @@ namespace eKucniLjubimci
             return services
                 .AddScoped<CustomerService>()
                 .AddScoped<ChargeService>()
-                .AddScoped<TokenService>()
-                .AddScoped<IStripeAppService, StripeAppService>();
+                .AddScoped<TokenService>();
         }
     }
 }

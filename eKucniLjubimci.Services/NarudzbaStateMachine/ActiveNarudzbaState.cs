@@ -22,6 +22,16 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             _customerService = customerService;
         }
 
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions =await base.AllowedActionsInState();
+            actions.Add("Cancel");
+            actions.Add("StripePayment");
+            actions.Add("StripeCustomer");
+            actions.Add("Delete");
+            return actions;
+        }
+
         public override async Task<DtoNarudzba> Cancel(int narudzbaId)
         {
             var dbObj = await _context.Set<Narudzba>().FindAsync(narudzbaId);

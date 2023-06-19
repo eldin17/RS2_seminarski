@@ -17,6 +17,18 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         {
         }
 
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("AddArtikal");
+            actions.Add("RemoveArtikal");
+            actions.Add("AddZivotinja");
+            actions.Add("RemoveZivotinja");
+            actions.Add("Update");
+            actions.Add("Delete");
+            return actions;
+        }
+
         public override async Task<DtoNarudzba> AddArtikal(int narudzbaId, int artikalId,int kolicina)
         {
             var narudzba = await _context.Narudzbe.FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);

@@ -50,6 +50,11 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
             }
         }
 
+        public virtual async Task<List<string>> AllowedActionsInState()
+        {
+            return new List<string>();
+        }
+
         public virtual async Task<DtoArtikal> Add(AddArtikal request)
         {
             throw new Exception("Action Not Allowed :(");

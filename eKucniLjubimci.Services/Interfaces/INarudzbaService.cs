@@ -24,5 +24,7 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<DtoNarudzba> Cancel(int narudzbaId);
         Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct);
         Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct);
+
+        Task<List<string>> AllowedActions(int narudzbaId);
     }
 }

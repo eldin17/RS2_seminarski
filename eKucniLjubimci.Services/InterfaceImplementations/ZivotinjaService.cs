@@ -82,6 +82,11 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             return await state.Delete(id);
         }
 
-    
+        public async Task<List<string>> AllowedActions(int zivotinjaId)
+        {
+            var zivotinja = await _context.Zivotinje.FindAsync(zivotinjaId);
+            var state = _baseZivotinjaState.GetState(zivotinja.StateMachine);
+            return await state.AllowedActionsInState();
+        }
     }
 }

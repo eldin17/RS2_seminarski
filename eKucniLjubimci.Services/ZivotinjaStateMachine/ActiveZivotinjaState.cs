@@ -16,6 +16,15 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
         {
         }
 
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("Update");
+            actions.Add("Delete");            
+            actions.Add("AddSlike");
+            return actions;
+        }
+
         public override async Task<DtoZivotinja> Update(int id, UpdateZivotinja request)
         {
             var dbObj = await _context.Set<Zivotinja>().FindAsync(id);

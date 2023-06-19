@@ -55,6 +55,11 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             }
         }
 
+        public virtual async Task<List<string>> AllowedActionsInState()
+        {
+            return new List<string>();
+        }
+
         public virtual async Task<DtoNarudzba> Add(AddNarudzba request)
         {
             throw new Exception("Action Not Allowed :(");

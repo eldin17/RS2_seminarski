@@ -15,6 +15,14 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
         public InitialZivotinjaState(DataContext context, IMapper mapper, IServiceProvider serviceProvider) : base(context, mapper, serviceProvider)
         {
         }
+
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("Add");            
+            return actions;
+        }
+
         public override async Task<DtoZivotinja> Add(AddZivotinja request)
         {
             var obj = _mapper.Map<Zivotinja>(request);

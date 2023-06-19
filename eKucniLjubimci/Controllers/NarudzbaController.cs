@@ -16,6 +16,13 @@ namespace eKucniLjubimci.Controllers
         public NarudzbaController(INarudzbaService service) : base(service)
         {
         }
+
+        [HttpGet("{id}/allowedActions")]
+        public virtual async Task<List<string>> AllowedActions(int id)
+        {
+            return await (_service as INarudzbaService).AllowedActions(id);
+        }
+
         [HttpPost("{narudzbaId}/AddArtikal/{artikalId}")]
         public virtual async Task<DtoNarudzba> AddArtikal(int narudzbaId, int artikalId, int kolicina)
         {

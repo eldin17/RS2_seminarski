@@ -21,6 +21,12 @@ namespace eKucniLjubimci.Controllers
             _context = context;
         }
 
+        [HttpGet("{id}/allowedActions")]
+        public virtual async Task<List<string>> AllowedActions(int id)
+        {
+            return await (_service as IArtikalService).AllowedActions(id);
+        }
+
         [HttpPut("{id}/activate")]
         public virtual async Task<DtoArtikal> Activate(int id)
         {

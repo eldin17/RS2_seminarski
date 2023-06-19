@@ -17,6 +17,13 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
         {
         }
 
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("Add");
+            return actions;
+        }
+
         public override async Task<DtoArtikal> Add(AddArtikal request)
         {
             var obj = _mapper.Map<Artikal>(request);

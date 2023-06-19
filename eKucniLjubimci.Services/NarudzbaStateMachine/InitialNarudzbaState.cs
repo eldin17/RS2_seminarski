@@ -16,6 +16,13 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         {
         }
 
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("Add");            
+            return actions;
+        }
+
         public override async Task<DtoNarudzba> Add(AddNarudzba request)
         {
             var obj = _mapper.Map<Narudzba>(request);

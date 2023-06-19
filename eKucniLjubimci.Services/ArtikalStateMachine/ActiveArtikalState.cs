@@ -15,6 +15,16 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
         public ActiveArtikalState(DataContext context, IMapper mapper, IServiceProvider serviceProvider) : base(context, mapper, serviceProvider)
         {
         }
+
+        public override async Task<List<string>> AllowedActionsInState()
+        {
+            var actions = await base.AllowedActionsInState();
+            actions.Add("Update");
+            actions.Add("Delete");
+            actions.Add("AddSlike");
+            return actions;
+        }
+
         public override async Task<DtoArtikal> Update(int id, UpdateArtikal request)
         {
             var dbObj = await _context.Set<Artikal>().FindAsync(id);

@@ -13,5 +13,8 @@ namespace eKucniLjubimci.Services.Interfaces
     {
         Task<DtoArtikal> Activate(int id);
         Task<DtoArtikal> Delete(int id);
+
+        Task<List<string>> AllowedActions(int zivotinjaId);
+
     }
 }

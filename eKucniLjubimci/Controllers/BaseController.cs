@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 namespace eKucniLjubimci.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BaseController<T, TSearch> : ControllerBase where TSearch : class
     {
         protected IBaseService<T, TSearch> _service;

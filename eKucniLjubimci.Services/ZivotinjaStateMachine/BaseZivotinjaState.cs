@@ -82,6 +82,11 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
         public virtual async Task<DtoZivotinja> Delete(int id)
         {
             throw new Exception("Action Not Allowed :(");
-        }        
+        }
+
+        public virtual async Task<DtoZivotinja> Dostupnost(int id, bool dostupnost)
+        {
+            throw new Exception("Action Not Allowed :(");
+        }
     }
 }

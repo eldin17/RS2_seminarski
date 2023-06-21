@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
+using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,15 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             _context.Set<Zivotinja>().Add(obj);
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqZivotinja>(obj);
+            mappedEntity.Funkcija = "Add";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoZivotinja>(obj);
         }
     }

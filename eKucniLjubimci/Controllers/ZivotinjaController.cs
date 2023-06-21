@@ -1,9 +1,13 @@
-﻿using eKucniLjubimci.Helpers;
+﻿using AutoMapper;
+using EasyNetQ;
+using eKucniLjubimci.Helpers;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
+using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
+using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +19,12 @@ namespace eKucniLjubimci.Controllers
     public class ZivotinjaController : BaseCRUDController<DtoZivotinja, SearchZivotinja, AddZivotinja, UpdateZivotinja>
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public ZivotinjaController(IZivotinjaService service, DataContext context) : base(service)
+        public ZivotinjaController(IZivotinjaService service, DataContext context, IMapper mapper) : base(service)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}/allowedActions")]
@@ -38,6 +44,13 @@ namespace eKucniLjubimci.Controllers
         {
             return await (_service as IZivotinjaService).Delete(id);
         }
+
+        [HttpPut("{id}/dostupnost")]
+        public virtual async Task<DtoZivotinja> Dostupnost(int id, bool dostupnost)
+        {
+            return await (_service as IZivotinjaService).Dostupnost(id, dostupnost);
+        }
+        
 
         [HttpPost("addSlikeZivotinja/{id}")]
         public async Task<IActionResult> AddSlikeZivotinja(int id, [FromForm] ImgMultipleVM obj)
@@ -81,6 +94,18 @@ namespace eKucniLjubimci.Controllers
                 _context.Add(nova);
                 await _context.SaveChangesAsync();
             }
+
+
+
+            var mappedEntity = _mapper.Map<rmqZivotinja>(zivotinja);
+            mappedEntity.Funkcija = "AddSlike";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
+
 
             return Ok(obj);
         }

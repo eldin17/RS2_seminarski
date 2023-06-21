@@ -2,6 +2,7 @@
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
+using eKucniLjubimci.Services.ArtikalStateMachine;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
 using eKucniLjubimci.Services.NarudzbaStateMachine;
@@ -87,6 +88,13 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var zivotinja = await _context.Zivotinje.FindAsync(zivotinjaId);
             var state = _baseZivotinjaState.GetState(zivotinja.StateMachine);
             return await state.AllowedActionsInState();
+        }
+
+        public async Task<DtoZivotinja> Dostupnost(int id, bool dostupnost)
+        {
+            var zivotinja = await _context.Zivotinje.FindAsync(id);
+            var state = _baseZivotinjaState.GetState(zivotinja.StateMachine);
+            return await state.Dostupnost(id, dostupnost);
         }
     }
 }

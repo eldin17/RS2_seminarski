@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
+using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
+using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
+using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,10 +42,14 @@ namespace eKucniLjubimci.Services
             CreateMap<Narudzba, DtoNarudzba>().ReverseMap();
             CreateMap<Narudzba, AddNarudzba>().ReverseMap();
             CreateMap<Narudzba, UpdateNarudzba>().ReverseMap();
+            CreateMap<Narudzba, rmqNarudzba>().ReverseMap();
+
 
             CreateMap<Artikal, DtoArtikal>().ReverseMap();
             CreateMap<Artikal, AddArtikal>().ReverseMap();
             CreateMap<Artikal, UpdateArtikal>().ReverseMap();
+            CreateMap<Artikal, rmqArtikal>().ReverseMap();
+
 
             CreateMap<Kategorija, DtoKategorija>().ReverseMap();
             CreateMap<Kategorija, AddKategorija>().ReverseMap();
@@ -63,6 +70,8 @@ namespace eKucniLjubimci.Services
             CreateMap<Zivotinja, DtoZivotinja>().ReverseMap();
             CreateMap<Zivotinja, AddZivotinja>().ReverseMap();
             CreateMap<Zivotinja, UpdateZivotinja>().ReverseMap();
+            CreateMap<Zivotinja, rmqZivotinja>().ReverseMap();
+
         }
     }
 }

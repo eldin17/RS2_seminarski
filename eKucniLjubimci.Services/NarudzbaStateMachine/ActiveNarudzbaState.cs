@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Services.Database;
+using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Stripe;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -39,6 +41,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             dbObj.StateMachine = "Draft";
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
+            mappedEntity.Funkcija = "Cancel";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
         public override async Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct)
@@ -65,6 +76,14 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             }
             await _context.SaveChangesAsync();
 
+            var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+            mappedEntity.Funkcija = "StripePayment";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return new StripePayment(
               createdPayment.CustomerId,
               createdPayment.ReceiptEmail,
@@ -82,10 +101,11 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 Source = customer.Token
             };
 
-            Customer createdCustomer = await _customerService.CreateAsync(customerOptions, null, ct);
+            Customer createdCustomer = await _customerService.CreateAsync(customerOptions, null, ct);            
 
             return new StripeCustomer(createdCustomer.Name, createdCustomer.Email, createdCustomer.Id);
         }
+
         public override async Task<DtoNarudzba> Delete(int narudzbaId)
         {
             var dbObj = await _context.Set<Narudzba>().FindAsync(narudzbaId);
@@ -93,6 +113,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             dbObj.StateMachine = "Deleted";
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
+            mappedEntity.Funkcija = "Delete";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
     }

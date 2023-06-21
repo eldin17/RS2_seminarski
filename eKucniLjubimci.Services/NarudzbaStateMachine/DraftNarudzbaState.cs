@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
+using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,14 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                     await _context.SaveChangesAsync();
                 }
 
+                var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+                mappedEntity.Funkcija = "AddArtikal";
+
+                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+                //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+                bus.PubSub.Publish(mappedEntity);
+
                 var obj = _mapper.Map<DtoNarudzba>(narudzba);
                 return obj;
             }
@@ -67,7 +77,16 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
 
                 _context.NarudzbeArtikli.Remove(narudzbaArtikal);
 
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
+
+                var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+                mappedEntity.Funkcija = "RemoveArtikal";
+
+                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+                //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+                bus.PubSub.Publish(mappedEntity);
+
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
             return null;
@@ -85,6 +104,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 zivotinja.NarudzbaId = narudzbaId;
                 zivotinja.StateMachine = "Reserved";
                 await _context.SaveChangesAsync();
+
+                var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+                mappedEntity.Funkcija = "AddZivotinja";
+
+                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+                //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+                bus.PubSub.Publish(mappedEntity);
+
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
             return null;
@@ -102,6 +130,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 zivotinja.NarudzbaId = null;
                 zivotinja.StateMachine = "Active";
                 await _context.SaveChangesAsync();
+
+                var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+                mappedEntity.Funkcija = "RemoveZivotinja";
+
+                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+                //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+                bus.PubSub.Publish(mappedEntity);
+
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
             return null;
@@ -114,6 +151,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             _mapper.Map(request, dbObj);
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
+            mappedEntity.Funkcija = "Update";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
 
@@ -124,6 +170,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             dbObj.StateMachine = "Active";
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
+            mappedEntity.Funkcija = "Activate";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
 
@@ -134,6 +189,15 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             dbObj.StateMachine = "Deleted";
 
             await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
+            mappedEntity.Funkcija = "Delete";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
     }

@@ -14,7 +14,7 @@ namespace eKucniLjubimci.Model.Requests
         [MaxLength(20, ErrorMessage = "Maksimalna dužina korisničkog imena je 20 karaktera")]
         public string Username { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Password-")]
-        [MinLength(5, ErrorMessage = "Minimalna dužina šifre je 5 karaktera")]
+        [MinLength(3, ErrorMessage = "Minimalna dužina šifre je 3 karaktera")]
         [MaxLength(20, ErrorMessage = "Maksimalna dužina šifre je 20 karaktera")]
         public string Password { get; set; }
         [Required(ErrorMessage = "Obavezno polje -UlogaId-")]

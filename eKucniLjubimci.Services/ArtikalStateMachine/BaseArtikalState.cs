@@ -74,5 +74,10 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
         {
             throw new Exception("Action Not Allowed :(");
         }
+
+        public virtual async Task<DtoArtikal> Dostupnost(int id, bool dostupnost)
+        {
+            throw new Exception("Action Not Allowed :(");
+        }
     }
 }

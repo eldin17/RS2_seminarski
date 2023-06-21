@@ -81,5 +81,12 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var state = _baseArtikalState.GetState(artikal.StateMachine);
             return await state.AllowedActionsInState();
         }
+        public async Task<DtoArtikal> Dostupnost(int id, bool dostupnost)
+        {
+            var artikal = await _context.Artikli.FindAsync(id);
+            var state = _baseArtikalState.GetState(artikal.StateMachine);
+            return await state.Dostupnost(id,dostupnost);
+        }
+
     }
 }

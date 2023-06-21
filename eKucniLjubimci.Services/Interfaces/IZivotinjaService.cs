@@ -16,6 +16,7 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<DtoZivotinja> Delete(int id);
 
         Task<List<string>> AllowedActions(int zivotinjaId);
+        Task<DtoZivotinja> Dostupnost(int id, bool dostupnost);
 
     }
 }

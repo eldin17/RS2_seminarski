@@ -2,7 +2,7 @@
 {
     public class Config
     {
-        public static string url = "https://localhost:7152/";
+        public static string url = "http://localhost:7152/";
 
         public static string SlikeArtikala => "SlikeArtikala/";
         public static string SlikeArtikalaUrl => url + SlikeArtikala;

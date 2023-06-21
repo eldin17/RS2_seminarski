@@ -1,12 +1,16 @@
-﻿using eKucniLjubimci.Helpers;
+﻿using AutoMapper;
+using EasyNetQ;
+using eKucniLjubimci.Helpers;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
+using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace eKucniLjubimci.Controllers
 {
@@ -15,10 +19,12 @@ namespace eKucniLjubimci.Controllers
     public class ArtikalController : BaseCRUDController<DtoArtikal, SearchArtikal, AddArtikal, UpdateArtikal>
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public ArtikalController(IArtikalService service, DataContext context) : base(service)
+        public ArtikalController(IArtikalService service, DataContext context,IMapper mapper) : base(service)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}/allowedActions")]
@@ -37,6 +43,12 @@ namespace eKucniLjubimci.Controllers
         public virtual async Task<DtoArtikal> Delete(int id)
         {
             return await (_service as IArtikalService).Delete(id);
+        }
+
+        [HttpPut("{id}/dostupnost")]
+        public virtual async Task<DtoArtikal> Dostupnost(int id, bool dostupnost=true)
+        {
+            return await (_service as IArtikalService).Dostupnost(id, dostupnost);
         }
 
         [HttpPost("addSlikeArtikla/{id}")]
@@ -82,6 +94,18 @@ namespace eKucniLjubimci.Controllers
                 _context.Add(nova);
                 await _context.SaveChangesAsync();
             }
+
+
+
+            var mappedEntity = _mapper.Map<rmqArtikal>(artikal);
+            mappedEntity.Funkcija = "AddSlike";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
+
 
             return Ok(obj);
         }

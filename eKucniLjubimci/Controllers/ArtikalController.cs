@@ -7,6 +7,7 @@ using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,25 +34,25 @@ namespace eKucniLjubimci.Controllers
             return await (_service as IArtikalService).AllowedActions(id);
         }
 
-        [HttpPut("{id}/activate")]
+        [HttpPut("{id}/activate"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoArtikal> Activate(int id)
         {
             return await (_service as IArtikalService).Activate(id);
         }
 
-        [HttpPut("{id}/delete")]
+        [HttpPut("{id}/delete"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoArtikal> Delete(int id)
         {
             return await (_service as IArtikalService).Delete(id);
         }
 
-        [HttpPut("{id}/dostupnost")]
+        [HttpPut("{id}/dostupnost"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoArtikal> Dostupnost(int id, bool dostupnost=true)
         {
             return await (_service as IArtikalService).Dostupnost(id, dostupnost);
         }
 
-        [HttpPost("addSlikeArtikla/{id}")]
+        [HttpPost("addSlikeArtikla/{id}"), Authorize(Roles = "Prodavac")]
         public async Task<IActionResult> AddSlikeArtikla(int id, [FromForm] ImgMultipleVM obj)
         {
             var artikal = await _context.Artikli.FirstOrDefaultAsync(x => x.ArtikalId == id);

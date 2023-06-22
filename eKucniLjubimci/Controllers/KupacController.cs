@@ -5,6 +5,7 @@ using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +25,13 @@ namespace eKucniLjubimci.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoKupac> Delete(int id)
         {
             return await (_service as IKupacService).Delete(id);
         }
 
-        [HttpPost("addSlikaKupca/{id}")]
+        [HttpPost("addSlikaKupca/{id}"), Authorize(Roles = "Kupac")]
         public async Task<ActionResult<DtoKupac>> AddSlikaKupca(int id, [FromForm] ImgSingleVM obj)
         {
             try

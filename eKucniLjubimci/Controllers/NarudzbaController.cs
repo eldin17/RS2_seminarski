@@ -4,6 +4,7 @@ using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
 using eKucniLjubimci.Services.Stripe;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,13 +66,13 @@ namespace eKucniLjubimci.Controllers
             return await (_service as INarudzbaService).Cancel(narudzbaId);
         }
 
-        [HttpPost("AddCustomerStripe/{id}")]
+        [HttpPost("AddCustomerStripe/{id}"), Authorize(Roles = "Kupac")]
         public async Task<StripeCustomer> AddStripeCustomer([FromBody] AddStripeCustomer customer, int id, CancellationToken ct)
         {
             return await (_service as INarudzbaService).StripeCustomer(customer,id, ct);
         }
 
-        [HttpPost("AddPaymentStripe/{id}")]
+        [HttpPost("AddPaymentStripe/{id}"), Authorize(Roles = "Kupac")]
         public async Task<StripePayment> AddStripePayment([FromBody] AddStripePayment payment, int id, CancellationToken ct)
         {
             return await (_service as INarudzbaService).StripePayment(payment, id, ct);

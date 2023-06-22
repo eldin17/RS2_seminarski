@@ -2,6 +2,7 @@
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace eKucniLjubimci.Controllers
         public KategorijaController(IKategorijaService service) : base(service)
         {
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoKategorija> Delete(int id)
         {
             return await (_service as IKategorijaService).Delete(id);

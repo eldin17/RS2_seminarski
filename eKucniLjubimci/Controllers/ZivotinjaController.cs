@@ -8,6 +8,7 @@ using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
 using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,26 +34,26 @@ namespace eKucniLjubimci.Controllers
             return await (_service as IZivotinjaService).AllowedActions(id);
         }
 
-        [HttpPut("{id}/activate")]
+        [HttpPut("{id}/activate"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoZivotinja> Activate(int id)
         {
             return await (_service as IZivotinjaService).Activate(id);
         }
 
-        [HttpPut("{id}/delete")]
+        [HttpPut("{id}/delete"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoZivotinja> Delete(int id)
         {
             return await (_service as IZivotinjaService).Delete(id);
         }
 
-        [HttpPut("{id}/dostupnost")]
+        [HttpPut("{id}/dostupnost"), Authorize(Roles = "Prodavac")]
         public virtual async Task<DtoZivotinja> Dostupnost(int id, bool dostupnost)
         {
             return await (_service as IZivotinjaService).Dostupnost(id, dostupnost);
         }
         
 
-        [HttpPost("addSlikeZivotinja/{id}")]
+        [HttpPost("addSlikeZivotinja/{id}"), Authorize(Roles = "Prodavac")]
         public async Task<IActionResult> AddSlikeZivotinja(int id, [FromForm] ImgMultipleVM obj)
         {
             var zivotinja = await _context.Zivotinje.FirstOrDefaultAsync(x => x.ZivotinjaId == id);

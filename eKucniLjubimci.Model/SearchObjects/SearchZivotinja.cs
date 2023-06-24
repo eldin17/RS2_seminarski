@@ -9,6 +9,8 @@ namespace eKucniLjubimci.Model.SearchObjects
     public class SearchZivotinja : BaseSearch
     {
         public string? Naziv { get; set; }
+        public string? Vrsta { get; set; }
+        public string? Rasa { get; set; }
         public int? VrstaId { get; set; }
         public decimal? CijenaDo { get; set; }
         public decimal? CijenaOd { get; set; }

@@ -32,7 +32,15 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         }
         public override IQueryable<Zivotinja> AddFilter(IQueryable<Zivotinja> data, SearchZivotinja? search)
         {
-            data = data.Where(x => x.StateMachine != "Deleted"&&(x.StateMachine=="Active"||x.StateMachine=="Reserved"));
+            data = data.Where(x => x.StateMachine != "Deleted");
+            if (!string.IsNullOrWhiteSpace(search.Rasa))
+            {
+                data = data.Where(x => x.Vrsta.Rasa.Contains(search.Rasa));
+            }
+            if (!string.IsNullOrWhiteSpace(search.Vrsta))
+            {
+                data = data.Where(x => x.Vrsta.Naziv.Contains(search.Vrsta));
+            }
             if (!string.IsNullOrWhiteSpace(search.Naziv))
             {
                 data = data.Where(x => x.Naziv.Contains(search.Naziv));

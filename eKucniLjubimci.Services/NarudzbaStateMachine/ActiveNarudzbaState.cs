@@ -54,7 +54,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         }
         public override async Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct)
         {
-            var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
+            var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x=>x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
             ChargeCreateOptions paymentOptions = new ChargeCreateOptions
             {
                 Customer = payment.CustomerId,

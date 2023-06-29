@@ -36,7 +36,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var narudzba = await _context.Narudzbe.FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
             var artikal = await _context.Artikli.FirstOrDefaultAsync(x => x.ArtikalId == artikalId);
             
-            if (narudzba != null && artikal != null && artikal.StateMachine=="Active")
+            if (narudzba != null && artikal != null && artikal.StateMachine=="Active" && artikal.Dostupnost==true)
             {
                 for (int i = 0; i < kolicina; i++)
                 {
@@ -97,7 +97,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var narudzba = await _context.Narudzbe.FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
             var zivotinja = await _context.Zivotinje.FirstOrDefaultAsync(x => x.ZivotinjaId == zivotinjaId);
 
-            if (narudzba != null && zivotinja != null && zivotinja.StateMachine=="Active")
+            if (narudzba != null && zivotinja != null && zivotinja.StateMachine=="Active" && zivotinja.Dostupnost==true)
             {
                 narudzba.TotalFinal += zivotinja.Cijena;
 

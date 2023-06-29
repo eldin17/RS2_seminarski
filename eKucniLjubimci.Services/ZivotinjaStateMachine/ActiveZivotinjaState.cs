@@ -25,6 +25,7 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             actions.Add("Update");
             actions.Add("Delete");            
             actions.Add("AddSlike");
+            actions.Add("Dostupnost");
             return actions;
         }
 

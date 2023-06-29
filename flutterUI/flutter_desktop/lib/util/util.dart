@@ -19,6 +19,10 @@ Color getTextColor(String? stateMachine) {
       return Colors.orange;
     case 'Sold':
       return Colors.green;
+    case 'Done':
+      return Colors.green;
+    case 'Reserved':
+      return Colors.purple;
     default:
       return Colors.black;
   }

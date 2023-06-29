@@ -29,7 +29,14 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
                 .Include(x => x.Zivotinje).ThenInclude(y=>y.Slike);
             return base.AddInclude(data, search);
         }
-        
+        public override async Task<DtoNarudzba> GetById(int id)
+        {
+            var data = await _context.Set<Narudzba>().Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+                .Include(x => x.Zivotinje).ThenInclude(y => y.Slike).FirstOrDefaultAsync(x => x.NarudzbaId == id);
+
+            return _mapper.Map<DtoNarudzba>(data);
+        }
+
         public override IQueryable<Narudzba> AddFilter(IQueryable<Narudzba> data, SearchNarudzba? search)
         {
             data = data.Where(x => x.StateMachine != "Deleted" && (x.StateMachine=="Active"|| x.StateMachine == "Done" || x.StateMachine == "Draft"));
@@ -37,6 +44,23 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             {
                 data = data.Where(x => x.KupacId == search.KupacId);
             }
+            if (!string.IsNullOrWhiteSpace(search.KupacIme))
+            {
+                data = data.Where(x => x.Kupac.Osoba.Ime.Contains(search.KupacIme));
+            }
+            if (!string.IsNullOrWhiteSpace(search.KupacPrezime))
+            {
+                data = data.Where(x => x.Kupac.Osoba.Prezime.Contains(search.KupacPrezime));
+            }
+            if (search.TotalDo != null && search.TotalDo > 0)
+            {
+                data = data.Where(x => x.TotalFinal <= search.TotalDo);
+            }
+            if (search.TotalOd != null && search.TotalOd > 0)
+            {
+                data = data.Where(x => x.TotalFinal >= search.TotalOd);
+            }
+
             return base.AddFilter(data, search);
         }
 

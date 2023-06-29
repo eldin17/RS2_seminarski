@@ -14,6 +14,5 @@ namespace eKucniLjubimci.Services.Interfaces
     public interface IKupacService : IBaseServiceCRUD<DtoKupac,SearchKupac,AddKupac,UpdateKupac>
     {
         Task<DtoKupac> Delete(int id);
-
     }
 }

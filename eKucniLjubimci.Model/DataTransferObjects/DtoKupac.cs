@@ -10,6 +10,7 @@ namespace eKucniLjubimci.Model.DataTransferObjects
     {
         public int KupacId { get; set; }
         public int BrojNarudzbi { get; set; }
+
         public bool Kuca { get; set; }
         public bool Dvoriste { get; set; }
         public bool Stan { get; set; }

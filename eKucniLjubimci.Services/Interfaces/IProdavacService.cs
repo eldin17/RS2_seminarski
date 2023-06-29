@@ -12,6 +12,7 @@ namespace eKucniLjubimci.Services.Interfaces
     public interface IProdavacService: IBaseServiceCRUD<DtoProdavac,SearchProdavac,AddProdavac,UpdateProdavac>
     {
         Task<DtoProdavac> Delete(int id);
+        Task<DtoProdavac> GetByKorisnickiNalogId(int korisnickiId);
 
     }
 }

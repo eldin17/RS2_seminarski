@@ -11,7 +11,7 @@ namespace eKucniLjubimci.Model.Requests
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -PoslovnaJedinica-")]
         public string PoslovnaJedinica { get; set; }
-        public string SlikaProdavca { get; set; } = "empty";
+        public string SlikaProdavca { get; set; } = "http://localhost:7152/SlikeProdavaca/Logo.jpg";
 
 
         [Required(ErrorMessage = "Obavezno polje -OsobaId-")]

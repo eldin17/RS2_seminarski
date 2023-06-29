@@ -29,18 +29,24 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             data = data.Include(x => x.Kategorija).Include(x => x.Slike);
             return base.AddInclude(data, search);
         }
+        public override async Task<DtoArtikal> GetById(int id)
+        {
+            var data = await _context.Set<Artikal>().Include(x => x.Kategorija).Include(x => x.Slike).FirstOrDefaultAsync(x => x.ArtikalId == id);
+
+            return _mapper.Map<DtoArtikal>(data);
+        }
         public override IQueryable<Artikal> AddFilter(IQueryable<Artikal> data, SearchArtikal? search)
         {
-            data = data.Where(x => x.StateMachine != "Deleted" && x.StateMachine == "Active");
+            data = data.Where(x => x.StateMachine != "Deleted").Where(x => x.Slike.Count > 0);
             if (!string.IsNullOrWhiteSpace(search.Naziv))
             {
                 data = data.Where(x => x.Naziv.Contains(search.Naziv));
             }
-            if (search.CijenaDo!=null && search.CijenaDo!=0)
+            if (search.CijenaDo!=null && search.CijenaDo>0)
             {
                 data = data.Where(x => x.Cijena<=search.CijenaDo);
             }
-            if (search.CijenaOd != null && search.CijenaOd != 0)
+            if (search.CijenaOd != null && search.CijenaOd > 0)
             {
                 data = data.Where(x => x.Cijena >= search.CijenaOd);
             }

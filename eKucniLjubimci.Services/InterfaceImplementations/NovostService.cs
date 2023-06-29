@@ -31,13 +31,26 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
         public override IQueryable<Novost> AddInclude(IQueryable<Novost> data, SearchNovost? search)
         {
-            data = data.Include(x => x.Prodavac);
+            data = data.Include(x => x.Prodavac).ThenInclude(x=>x.Osoba).OrderByDescending(x=>x.DatumPostavljanja);
             return base.AddInclude(data, search);
         }
+        public override async Task<DtoNovost> GetById(int id)
+        {
+            var data = await _context.Set<Novost>().Include(x => x.Prodavac).ThenInclude(x=>x.Osoba).FirstOrDefaultAsync(x => x.NovostId == id);
 
+            return _mapper.Map<DtoNovost>(data);
+        }
         public override IQueryable<Novost> AddFilter(IQueryable<Novost> data, SearchNovost? search)
         {
             data = data.Where(x => x.isDeleted == false);
+            if (!string.IsNullOrWhiteSpace(search.ProdavacIme))
+            {
+                data = data.Where(x => x.Prodavac.Osoba.Ime.Contains(search.ProdavacIme));
+            }
+            if (!string.IsNullOrWhiteSpace(search.ProdavacPrezime))
+            {
+                data = data.Where(x => x.Prodavac.Osoba.Prezime.Contains(search.ProdavacPrezime));
+            }
             if (!string.IsNullOrWhiteSpace(search.Naslov))
             {
                 data = data.Where(x => x.Naslov.Contains(search.Naslov));

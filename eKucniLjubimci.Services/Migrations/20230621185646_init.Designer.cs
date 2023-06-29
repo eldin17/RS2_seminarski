@@ -126,7 +126,7 @@ namespace eKucniLjubimci.Services.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KupacId"));
 
                     b.Property<int>("BrojNarudzbi")
-                        .HasColumnType("int");
+                        .HasColumnType("int");                    
 
                     b.Property<bool>("Dvoriste")
                         .HasColumnType("bit");

@@ -18,7 +18,7 @@ namespace eKucniLjubimci.Model.Requests
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Boja-")]
         public string Boja { get; set; }
 
-        [Range(1, 300, ErrorMessage = "Starost mora biti u rasponu 1-300")]
+        [Range(1, 100, ErrorMessage = "Starost mora biti u rasponu 1-100")]
         public int Starost { get; set; }
         public bool Prostor { get; set; } = false;
     }

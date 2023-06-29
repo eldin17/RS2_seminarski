@@ -30,9 +30,15 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
             return base.AddInclude(data, search);
         }
+        public override async Task<DtoZivotinja> GetById(int id)
+        {
+            var data = await _context.Set<Zivotinja>().Include(x=>x.Vrsta).Include(x=>x.Slike).FirstOrDefaultAsync(x=>x.ZivotinjaId==id);
+
+            return _mapper.Map<DtoZivotinja>(data);
+        }
         public override IQueryable<Zivotinja> AddFilter(IQueryable<Zivotinja> data, SearchZivotinja? search)
         {
-            data = data.Where(x => x.StateMachine != "Deleted");
+            data = data.Where(x => x.StateMachine != "Deleted").Where(x=>x.Slike.Count>0);
             if (!string.IsNullOrWhiteSpace(search.Rasa))
             {
                 data = data.Where(x => x.Vrsta.Rasa.Contains(search.Rasa));

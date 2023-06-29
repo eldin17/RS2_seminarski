@@ -35,13 +35,40 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             data=data.Include(x=>x.Osoba).Include(x=>x.Lokacija).Include(x=>x.KorisnickiNalog).ThenInclude(x=>x.Uloga);
             return base.AddInclude(data, search);
         }
+        
+        public override async Task<DtoKupac> GetById(int id)
+        {
+            var data = await _context.Set<Kupac>().Include(x => x.Osoba).Include(x => x.Lokacija).Include(x => x.KorisnickiNalog).ThenInclude(x => x.Uloga).FirstOrDefaultAsync(x => x.KupacId == id);
+
+            return _mapper.Map<DtoKupac>(data);
+        }
 
         public override IQueryable<Kupac> AddFilter(IQueryable<Kupac> data, SearchKupac? search)
         {
             data = data.Where(x => x.isDeleted == false);
-            if (search.BrojNarudzbi != null && search.BrojNarudzbi > 0)
+            if (!string.IsNullOrWhiteSpace(search.Grad))
             {
-                data = data.Where(x => x.BrojNarudzbi <= search.BrojNarudzbi);
+                data = data.Where(x => x.Lokacija.Grad.Contains(search.Grad));
+            }
+            if (!string.IsNullOrWhiteSpace(search.Drzava))
+            {
+                data = data.Where(x => x.Lokacija.Drzava.Contains(search.Drzava));
+            }
+            if (!string.IsNullOrWhiteSpace(search.Ime))
+            {
+                data = data.Where(x => x.Osoba.Ime.Contains(search.Ime));
+            }
+            if (!string.IsNullOrWhiteSpace(search.Prezime))
+            {
+                data = data.Where(x => x.Osoba.Prezime.Contains(search.Prezime));
+            }
+            if (search.BrojNarudzbiOd != null && search.BrojNarudzbiOd > 0)
+            {
+                data = data.Where(x => x.BrojNarudzbi >= search.BrojNarudzbiOd);
+            }
+            if (search.BrojNarudzbiDo != null && search.BrojNarudzbiDo > 0)
+            {
+                data = data.Where(x => x.BrojNarudzbi <= search.BrojNarudzbiDo);
             }
             if (search.Kuca==true)
             {
@@ -54,14 +81,11 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             if (search.Stan == true)
             {
                 data = data.Where(x => x.Stan == search.Stan);
-            }
-            if (!string.IsNullOrWhiteSpace(search.ImePrezime))
-            {
-                data = data.Where(x => x.Osoba.Ime.Contains(search.ImePrezime) || 
-                x.Osoba.Prezime.Contains(search.ImePrezime));
-            }
+            }            
             return base.AddFilter(data, search);
 
         }
+
+        
     }
 }

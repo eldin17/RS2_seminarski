@@ -30,53 +30,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold homeMethod() {
     return Scaffold(
-      body: Column(
-        children: [
-          ClipRRect(
-            borderRadius:
-                BorderRadius.circular(20.0), // Set the desired border radius
-            child: Image.asset(
-              "assets/images/logo.jpg",
-              height: 180,
-            ),
-          ),
-          Text(
-            "Dobro došli!",
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              var obj = await _zivotinjeProvider.get();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MasterScreen(
-                    prikaz: ZivotinjeScreen(
-                      podaci: obj,
-                    ),
-                  ),
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(
+                    20.0), // Set the desired border radius
+                child: Image.asset(
+                  "assets/images/logo.jpg",
+                  height: 180,
                 ),
-              );
-            },
-            child: Text("Nastavi"),
+              ),
+              Text(
+                "Dobro došli!",
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var obj = await _zivotinjeProvider.get();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MasterScreen(
+                        prikaz: ZivotinjeScreen(
+                          podaci: obj,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Text("Nastavi"),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    LoginResponse.idLogiranogKorisnika = null;
+                    LoginResponse.ulogaNaziv = null;
+                    LoginResponse.token = null;
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text("Odjavi se"),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 25,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                LoginResponse.idLogiranogKorisnika = null;
-                LoginResponse.ulogaNaziv = null;
-                LoginResponse.token = null;
-                Navigator.of(context).pop();
-              });
-            },
-            child: Text("Odjavi se"),
-          ),
-        ],
+        ),
       ),
     );
   }

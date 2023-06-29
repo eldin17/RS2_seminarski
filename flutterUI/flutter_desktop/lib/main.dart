@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_desktop/providers/artikli_provider.dart';
+import 'package:flutter_desktop/providers/kategorije_provider.dart';
+import 'package:flutter_desktop/providers/kupac_provider.dart';
 import 'package:flutter_desktop/providers/login_register.dart';
+import 'package:flutter_desktop/providers/narudzbe_provider.dart';
+import 'package:flutter_desktop/providers/novosti_provider.dart';
+import 'package:flutter_desktop/providers/osoba_provider.dart';
+import 'package:flutter_desktop/providers/prodavac_provider.dart';
+import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
 import 'package:flutter_desktop/screens/home_screen.dart';
+import 'package:flutter_desktop/screens/registracija.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +22,14 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => LoginRegisterProvider()),
         ChangeNotifierProvider(create: (_) => ZivotinjeProvider()),
+        ChangeNotifierProvider(create: (_) => ArtikliProvider()),
+        ChangeNotifierProvider(create: (_) => KupacProvider()),
+        ChangeNotifierProvider(create: (_) => NovostiProvider()),
+        ChangeNotifierProvider(create: (_) => VrsteProvider()),
+        ChangeNotifierProvider(create: (_) => OsobaProvider()),
+        ChangeNotifierProvider(create: (_) => ProdavacProvider()),
+        ChangeNotifierProvider(create: (_) => KategorijeProvider()),
+        ChangeNotifierProvider(create: (_) => NarudzbeProvider()),
       ],
       child: const MyMaterialApp(),
     ),
@@ -147,7 +164,13 @@ class _LoginPage2State extends State<LoginPage2> {
                   height: 25,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RegistracijaScreen(),
+                      ),
+                    );
+                  },
                   child: Text("Niste registrovani?"),
                 ),
               ],

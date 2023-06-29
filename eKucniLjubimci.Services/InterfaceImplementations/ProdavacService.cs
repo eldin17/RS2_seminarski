@@ -35,7 +35,12 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
             return base.AddInclude(data, search);
         }
+        public override async Task<DtoProdavac> GetById(int id)
+        {
+            var data = await _context.Set<Prodavac>().Include(x => x.Osoba).Include(x => x.KorisnickiNalog).FirstOrDefaultAsync(x => x.ProdavacId == id);
 
+            return _mapper.Map<DtoProdavac>(data);
+        }
         public override IQueryable<Prodavac> AddFilter(IQueryable<Prodavac> data, SearchProdavac? search)
         {
             data = data.Where(x => x.isDeleted == false);
@@ -44,6 +49,13 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
                 data = data.Where(x => x.PoslovnaJedinica.Contains(search.PoslovnaJedinica));
             }            
             return base.AddFilter(data, search);
+        }
+
+        public async Task<DtoProdavac> GetByKorisnickiNalogId(int korisnickiId)
+        {
+            var data = await _context.Set<Prodavac>().Include(x => x.Osoba).FirstOrDefaultAsync(x => x.KorisnickiNalogId == korisnickiId);
+
+            return _mapper.Map<DtoProdavac>(data);
         }
     }
 }

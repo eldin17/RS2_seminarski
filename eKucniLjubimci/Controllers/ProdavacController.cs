@@ -14,6 +14,7 @@ namespace eKucniLjubimci.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class ProdavacController : BaseCRUDController<DtoProdavac, SearchProdavac, AddProdavac, UpdateProdavac>
     {
         private readonly DataContext _context;
@@ -27,6 +28,12 @@ namespace eKucniLjubimci.Controllers
         public virtual async Task<DtoProdavac> Delete(int id)
         {
             return await (_service as IProdavacService).Delete(id);
+        }
+        [HttpGet("getByKorisnickiNalog/{korisnickiId}")]
+        public async Task<DtoProdavac> GetByKorisnickiNalogId(int korisnickiId)
+        {
+            return await (_service as IProdavacService).GetByKorisnickiNalogId(korisnickiId);
+
         }
 
         [HttpPost("addSlikaProdavca/{id}"), Authorize(Roles = "Prodavac")]

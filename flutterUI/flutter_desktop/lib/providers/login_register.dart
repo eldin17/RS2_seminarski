@@ -5,6 +5,9 @@ import 'package:flutter_desktop/models/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+import '../models/korisnicki_nalog.dart';
+import '../models/registracija_model.dart';
+
 class LoginRegisterProvider with ChangeNotifier {
   static String? _baseUrl;
   String _endpoint = "api/KorisnickiNalog";
@@ -43,14 +46,43 @@ class LoginRegisterProvider with ChangeNotifier {
       throw new Exception("Greska!");
     }
   }
-}
 
-bool isValidResponse(Response response) {
-  if (response.statusCode < 299) {
-    return true;
-  } else if (response.statusCode == 400) {
-    throw new Exception("Pogresno korisnicko ime ili sifra");
-  } else {
-    throw new Exception("Greska. Molimo pokusajte ponovo.");
+  Future<KorisnickiNalog> register(RegisterModel obj) async {
+    var url = "$_baseUrl$_endpoint/register";
+    var uri = Uri.parse(url);
+
+    var body = {
+      "username": obj.username,
+      "password": obj.password,
+      "ulogaId": obj.ulogaId,
+    };
+
+    var response = await http.post(
+      uri,
+      headers: {
+        'accept': 'text/plain',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      // Registration successful
+      var korisnickiNalog = KorisnickiNalog.fromJson(data);
+      return korisnickiNalog;
+    } else {
+      throw new Exception("Greska pri registraciji!");
+    }
+  }
+
+  bool isValidResponse(Response response) {
+    if (response.statusCode < 299) {
+      return true;
+    } else if (response.statusCode == 400) {
+      throw new Exception("Pogresno korisnicko ime ili sifra");
+    } else {
+      throw new Exception("Greska. Molimo pokusajte ponovo.");
+    }
   }
 }

@@ -247,9 +247,9 @@ namespace eKucniLjubimci.Services.Migrations
                 columns: new[] { "KupacId", "BrojNarudzbi", "Kuca", "Dvoriste", "Stan", "OsobaId", "LokacijaId", "SlikaKupca", "KorisnickiNalogId", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, 3,true,true,false,1,1,"http://localhost:7152/SlikeKupaca/slika1.jpg",3,false },
-                    { 2, 2,false,false,true,2,2,"http://localhost:7152/SlikeKupaca/slika2.jpg",4,false },
-                    { 3, 1,false,true,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
+                    { 1, 3, true,true,false,1,1,"http://localhost:7152/SlikeKupaca/slika1.jpg",3,false },
+                    { 2, 2, false,false,true,2,2,"http://localhost:7152/SlikeKupaca/slika2.jpg",4,false },
+                    { 3, 1, false,true,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
                 });
 
             migrationBuilder.InsertData(

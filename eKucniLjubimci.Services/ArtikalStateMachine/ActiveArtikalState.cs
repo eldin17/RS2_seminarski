@@ -24,6 +24,7 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
             actions.Add("Update");
             actions.Add("Delete");
             actions.Add("AddSlike");
+            actions.Add("Dostupnost");
             return actions;
         }
 

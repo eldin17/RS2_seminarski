@@ -78,5 +78,31 @@ namespace eKucniLjubimci.Controllers
             return await (_service as INarudzbaService).StripePayment(payment, id, ct);
         }
 
+        [HttpGet("topLastMonth"), Authorize(Roles = "Prodavac")]
+        public async Task<DtoNarudzba> GetTopLastMonth()
+        {
+            return await (_service as INarudzbaService).GetTopLastMonth();
+        }
+        [HttpGet("topAllTime"), Authorize(Roles = "Prodavac")]
+        public async Task<DtoNarudzba> GetTopAllTime()
+        {
+            return await (_service as INarudzbaService).GetTopAllTime();
+
+        }
+        [HttpGet("totalLastMonth"), Authorize(Roles = "Prodavac")]
+        public async Task<decimal> GetTotalLastMonth()
+        {
+            return await (_service as INarudzbaService).GetTotalLastMonth();
+        }
+        [HttpGet("totalAllTime"), Authorize(Roles = "Prodavac")]
+        public async Task<decimal> GetTotalAllTime()
+        {
+            return await (_service as INarudzbaService).GetTotalAllTime();
+        }
+        [HttpGet("allLastMonth"), Authorize(Roles = "Prodavac")]
+        public async Task<List<DtoNarudzba>> GetAllLastMonth()
+        {
+            return await (_service as INarudzbaService).GetAllLastMonth();
+        }
     }
 }

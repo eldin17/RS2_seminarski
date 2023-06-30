@@ -43,6 +43,7 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _topPart(context, widget.narudzba, widget.kupac),
         Row(
@@ -51,6 +52,17 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
             _rightPart(context, widget.narudzba),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+              child: Text("Nazad"),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -58,6 +70,7 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
   Expanded _leftPart(BuildContext context, Narudzba narudzba) {
     return Expanded(
       child: Container(
+        height: 400,
         child: Card(
           child: Flexible(
             child: SingleChildScrollView(
@@ -106,6 +119,7 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
   Expanded _rightPart(BuildContext context, Narudzba narudzba) {
     return Expanded(
       child: Container(
+        height: 400,
         child: Card(
           child: Flexible(
             child: SingleChildScrollView(
@@ -128,12 +142,23 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
                           style: TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ),
+                    ),
+                    const DataColumn(
+                      label: const Expanded(
+                        child: const Text(
+                          "",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
                     )
                   ],
                   rows: (narudzba.zivotinje != null || narudzba.zivotinje != [])
                       ? narudzba.zivotinje!
                               .map((Zivotinja e) => DataRow(cells: [
-                                    DataCell(Text(e.naziv?.toString() ?? "")),
+                                    DataCell(
+                                        Text(e.vrsta?.naziv.toString() ?? "")),
+                                    DataCell(
+                                        Text(e.vrsta?.rasa.toString() ?? "")),
                                     DataCell(Text(
                                         "${formatNumber(e.cijena)?.toString()} KM")),
                                   ]))

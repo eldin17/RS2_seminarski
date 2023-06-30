@@ -86,6 +86,11 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
         }
 
-        
+        public async Task<List<DtoKupac>> GetTop3()
+        {
+            var data = await _context.Set<Kupac>().Include(x => x.Osoba).Include(x => x.Lokacija).Include(x => x.KorisnickiNalog).ThenInclude(x => x.Uloga).OrderByDescending(x=>x.BrojNarudzbi).Take(3).ToListAsync();
+
+            return _mapper.Map<List<DtoKupac>>(data);
+        }
     }
 }

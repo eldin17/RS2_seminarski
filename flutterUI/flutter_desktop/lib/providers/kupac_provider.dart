@@ -52,6 +52,35 @@ class KupacProvider with ChangeNotifier {
     }
   }
 
+  Future<List<Kupac>> getTop3() async {
+    var url = "$_baseUrl$_endpoint/getTop3";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      List<Kupac> result = [];
+      for (var item in data) {
+        result.add(Kupac.fromJson(item));
+      }
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
   Future<Kupac> getId(int id) async {
     var url = "$_baseUrl$_endpoint/$id";
 

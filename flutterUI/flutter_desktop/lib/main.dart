@@ -126,8 +126,8 @@ class _LoginPage2State extends State<LoginPage2> {
                   child: FilledButton(
                     onPressed: () async {
                       try {
-                        var username = _usernameController.text;
-                        var password = _passwordController.text;
+                        var username = _usernameController.text.trim();
+                        var password = _passwordController.text.trim();
 
                         await _loginRegisterProvider.login(username, password);
 

@@ -26,5 +26,11 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct);
 
         Task<List<string>> AllowedActions(int narudzbaId);
+        Task<DtoNarudzba> GetTopLastMonth();
+        Task<DtoNarudzba> GetTopAllTime();
+        Task<decimal> GetTotalLastMonth();
+        Task<decimal> GetTotalAllTime();
+        Task<List<DtoNarudzba>> GetAllLastMonth();
+
     }
 }

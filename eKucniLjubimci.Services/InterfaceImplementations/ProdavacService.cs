@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,6 +57,18 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var data = await _context.Set<Prodavac>().Include(x => x.Osoba).FirstOrDefaultAsync(x => x.KorisnickiNalogId == korisnickiId);
 
             return _mapper.Map<DtoProdavac>(data);
+        }
+
+        public async Task<DtoProdavac> TopAktivnost()
+        {
+            var data = await _context.Novosti.Where(x=>x.DatumPostavljanja>DateTime.UtcNow.AddMonths(-1)).Include(x => x.Prodavac)
+                .ThenInclude(x => x.Osoba)
+                .GroupBy(x => x.Prodavac)
+                .OrderByDescending(x => x.Count())
+                .Select(x => x.Key)
+                .FirstOrDefaultAsync();
+            var osoba = await _context.Prodavci.Include(x => x.Osoba).FirstOrDefaultAsync(x => x.ProdavacId == data.ProdavacId);
+            return _mapper.Map<DtoProdavac>(osoba);
         }
     }
 }

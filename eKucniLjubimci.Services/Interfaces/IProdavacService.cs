@@ -13,6 +13,6 @@ namespace eKucniLjubimci.Services.Interfaces
     {
         Task<DtoProdavac> Delete(int id);
         Task<DtoProdavac> GetByKorisnickiNalogId(int korisnickiId);
-
+        Task<DtoProdavac> TopAktivnost();
     }
 }

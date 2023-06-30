@@ -14,7 +14,6 @@ namespace eKucniLjubimci.Model.DataTransferObjects
         public string StateMachine { get; set; }
 
 
-        public virtual DtoKupac Kupac { get; set; }
         public int KupacId { get; set; }
 
         public virtual List<DtoNarudzbaArtikal> NarudzbeArtikli { get; set; }

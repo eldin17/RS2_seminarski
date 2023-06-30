@@ -57,5 +57,12 @@ namespace eKucniLjubimci.Controllers
                 return BadRequest(ex.Message + ex.InnerException);
             }
         }
+
+        [HttpGet("topByAktivnost"), Authorize(Roles = "Prodavac")]
+        public async Task<DtoProdavac> TopAktivnost()
+        {
+            return await (_service as IProdavacService).TopAktivnost();
+
+        }
     }
 }

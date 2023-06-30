@@ -26,7 +26,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         public override IQueryable<Narudzba> AddInclude(IQueryable<Narudzba> data, SearchNarudzba? search)
         {
             data = data.Include(x => x.NarudzbeArtikli).ThenInclude(y=>y.Artikal).ThenInclude(z => z.Slike)
-                .Include(x => x.Zivotinje).ThenInclude(y=>y.Slike);
+                .Include(x => x.Zivotinje).ThenInclude(y=>y.Slike).Include(x=>x.Zivotinje).ThenInclude(x=>x.Vrsta).OrderByDescending(x=>x.DatumNarudzbe);
             return base.AddInclude(data, search);
         }
         public override async Task<DtoNarudzba> GetById(int id)
@@ -145,6 +145,51 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
             var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
             return await state.AllowedActionsInState();
+        }
+
+        public async Task<DtoNarudzba> GetTopLastMonth()
+        {
+            Narudzba data = await _context.Narudzbe.Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+                            .Include(x => x.Zivotinje).ThenInclude(y => y.Slike).Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta).Where(x=>x.DatumNarudzbe>DateTime.UtcNow.AddMonths(-1)).
+                            OrderByDescending(x => x.TotalFinal).FirstOrDefaultAsync();
+            return _mapper.Map<DtoNarudzba>(data);
+        }
+
+        public async Task<DtoNarudzba> GetTopAllTime()
+        {
+            Narudzba data = await _context.Narudzbe.Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+                            .Include(x => x.Zivotinje).ThenInclude(y => y.Slike).Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta).
+                            OrderByDescending(x => x.TotalFinal).FirstOrDefaultAsync();
+            return _mapper.Map<DtoNarudzba>(data);
+        }
+
+        public async Task<decimal> GetTotalLastMonth()
+        {
+            decimal total = 0;
+            var data = await _context.Narudzbe.Where(x => x.DatumNarudzbe > DateTime.UtcNow.AddMonths(-1)).ToListAsync();
+            foreach (var item in data)
+            {
+                total += item.TotalFinal;
+            }
+            return total;
+        }
+
+        public async Task<decimal> GetTotalAllTime()
+        {
+            decimal total = 0;
+            var data = await _context.Narudzbe.ToListAsync();
+            foreach (var item in data)
+            {
+                total += item.TotalFinal;
+            }
+            return total;
+        }
+
+        public async Task<List<DtoNarudzba>> GetAllLastMonth()
+        {
+            var data = await _context.Narudzbe.Where(x => x.DatumNarudzbe > DateTime.UtcNow.AddMonths(-1)).OrderByDescending(x=>x.DatumNarudzbe).ToListAsync();
+            data.Reverse();
+            return _mapper.Map<List<DtoNarudzba>>(data);
         }
     }
 }

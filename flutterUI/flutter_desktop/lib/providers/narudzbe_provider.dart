@@ -16,6 +16,139 @@ class NarudzbeProvider with ChangeNotifier {
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "http://localhost:7152/");
   }
+
+  Future<Narudzba> najskuplja1() async {
+    var url = "$_baseUrl$_endpoint/topLastMonth";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      Narudzba result = Narudzba.fromJson(data);
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
+  Future<Narudzba> najskuplja2() async {
+    var url = "$_baseUrl$_endpoint/topAllTime";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      Narudzba result = Narudzba.fromJson(data);
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
+  Future<double> zarada1() async {
+    var url = "$_baseUrl$_endpoint/totalLastMonth";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      double result = data.toDouble();
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
+  Future<List<Narudzba>> getMonth() async {
+    var url = "$_baseUrl$_endpoint/allLastMonth";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      List<Narudzba> result = [];
+      for (var item in data) {
+        result.add(Narudzba.fromJson(item));
+      }
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
+  Future<double> zarada2() async {
+    var url = "$_baseUrl$_endpoint/totalAllTime";
+
+    var headers = {
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      double result = data.toDouble();
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
   // Future<Narudzba> add(dynamic obj) async {
   //   var url = "$_baseUrl$_endpoint";
 

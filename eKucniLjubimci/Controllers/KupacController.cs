@@ -29,7 +29,13 @@ namespace eKucniLjubimci.Controllers
         public virtual async Task<DtoKupac> Delete(int id)
         {
             return await (_service as IKupacService).Delete(id);
-        }        
+        }
+        [HttpGet("getTop3"), Authorize(Roles = "Prodavac")]
+        public async Task<List<DtoKupac>> GetTop3()
+        {
+            return await (_service as IKupacService).GetTop3();
+
+        }
 
         [HttpPost("addSlikaKupca/{id}"), Authorize(Roles = "Kupac")]
         public async Task<ActionResult<DtoKupac>> AddSlikaKupca(int id, [FromForm] ImgSingleVM obj)

@@ -55,6 +55,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         public override async Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct)
         {
             var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x=>x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
+            var kupac = await _context.Kupci.Include(x => x.Osoba).FirstOrDefaultAsync(x => x.KupacId == narudzba.KupacId);
             ChargeCreateOptions paymentOptions = new ChargeCreateOptions
             {
                 Customer = payment.CustomerId,
@@ -67,6 +68,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var createdPayment = await _chargeService.CreateAsync(paymentOptions, null, ct);
 
             narudzba.StateMachine = "Done";
+            kupac.BrojNarudzbi++;
             if (narudzba.Zivotinje.Count() > 0)
             {
                 foreach (var zivotinja in narudzba.Zivotinje)

@@ -4,6 +4,7 @@ import 'package:flutter_desktop/providers/artikli_provider.dart';
 import 'package:flutter_desktop/providers/narudzbe_provider.dart';
 import 'package:flutter_desktop/providers/novosti_provider.dart';
 import 'package:flutter_desktop/screens/artikli_screen.dart';
+import 'package:flutter_desktop/screens/izvjestaji.dart';
 import 'package:flutter_desktop/screens/kupci_screen.dart';
 import 'package:flutter_desktop/screens/narudzbe_screen.dart';
 import 'package:flutter_desktop/screens/novosti_screen.dart';
@@ -169,7 +170,15 @@ class _MasterScreenState extends State<MasterScreen> {
                         Container(
                           width: 200,
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MasterScreen(
+                                      prikaz: PoslovniIzvjestaji(),
+                                    ),
+                                  ),
+                                );
+                              },
                               child: Text("Poslovni izjvestaji")),
                         ),
                       ],

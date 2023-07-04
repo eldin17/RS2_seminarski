@@ -17,13 +17,17 @@ namespace eKucniLjubimci.Model.DataTransferObjects
 
 
         public virtual DtoOsoba Osoba { get; set; }
+        public int OsobaId { get; set; }
 
         public virtual DtoLokacija Lokacija { get; set; }
+        public int LokacijaId { get; set; }
 
         public virtual List<DtoNarudzba> Narudzbe { get; set; }
 
         public string SlikaKupca { get; set; }
 
         public virtual DtoKorisnickiNalog KorisnickiNalog { get; set; }
+        public int KorisnickiNalogId { get; set; }
+
     }
 }

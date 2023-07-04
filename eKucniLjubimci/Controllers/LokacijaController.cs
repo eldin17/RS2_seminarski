@@ -2,6 +2,7 @@
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace eKucniLjubimci.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class LokacijaController : BaseCRUDController<DtoLokacija, SearchLokacija, AddLokacija, UpdateLokacija>
     {
         public LokacijaController(ILokacijaService service) : base(service)

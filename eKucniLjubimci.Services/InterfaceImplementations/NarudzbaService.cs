@@ -191,5 +191,27 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             data.Reverse();
             return _mapper.Map<List<DtoNarudzba>>(data);
         }
+
+        public async Task<List<DtoNarudzba>> GetByKupac(int kupac)
+        {
+            var data = await _context.Set<Narudzba>()
+                .Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+                .Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Kategorija)
+                .Include(x => x.Zivotinje).ThenInclude(y => y.Slike)
+                .Include(x => x.Zivotinje).ThenInclude(y => y.Vrsta)
+                .Where(x=>x.StateMachine=="Done")
+                .Where(x => x.KupacId == kupac)
+                .OrderByDescending(x=>x.DatumNarudzbe)
+                .ToListAsync();
+
+            return _mapper.Map<List<DtoNarudzba>>(data);
+        }
+
+        public async Task<DtoNarudzba> Payment(int narudzbaId)
+        {
+            var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
+            var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
+            return await state.Payment(narudzbaId);
+        }
     }
 }

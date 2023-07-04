@@ -15,6 +15,7 @@ namespace eKucniLjubimci.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class KupacController : BaseCRUDController<DtoKupac, SearchKupac, AddKupac, UpdateKupac>
     {
         private readonly DataContext _context;
@@ -57,6 +58,12 @@ namespace eKucniLjubimci.Controllers
             {
                 return BadRequest(ex.Message + ex.InnerException);
             }
+        }
+        [HttpGet("getByKorisnickiNalog/{korisnickiId}")]
+        public async Task<DtoKupac> GetByKorisnickiNalogId(int korisnickiId)
+        {
+            return await (_service as IKupacService).GetByKorisnickiNalogId(korisnickiId);
+
         }
     }
 }

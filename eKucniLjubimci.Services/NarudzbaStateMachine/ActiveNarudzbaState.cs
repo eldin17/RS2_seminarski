@@ -94,6 +94,33 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
               createdPayment.Amount,
               createdPayment.Id);
         }
+
+        public override async Task<DtoNarudzba> Payment(int narudzbaId)
+        {
+            var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x => x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
+            var kupac = await _context.Kupci.Include(x => x.Osoba).FirstOrDefaultAsync(x => x.KupacId == narudzba.KupacId);      
+
+            narudzba.StateMachine = "Done";
+            kupac.BrojNarudzbi++;
+            if (narudzba.Zivotinje.Count() > 0)
+            {
+                foreach (var zivotinja in narudzba.Zivotinje)
+                {
+                    zivotinja.StateMachine = "Sold";
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
+            mappedEntity.Funkcija = "StripePayment";
+
+            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
+            //using var bus = RabbitHutch.CreateBus("host=localhost");
+
+            bus.PubSub.Publish(mappedEntity);
+
+            return _mapper.Map<DtoNarudzba>(narudzba);
+        }
         public override async Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct)
         {
             CustomerCreateOptions customerOptions = new CustomerCreateOptions

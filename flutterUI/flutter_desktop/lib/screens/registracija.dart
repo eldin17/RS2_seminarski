@@ -253,8 +253,6 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                     buttonProgressNotifier.value == 3 && _imageFile != null
                         ? () async {
                             if (_formKey.currentState!.saveAndValidate()) {
-                              // Access the selected image file using _imageFile
-                              // and pass it to the upload function
                               _prodavacProvider.addSlikaProdavca(
                                   prodavacIdhelper, _imageFile!);
                               setState(() {
@@ -502,8 +500,6 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: 20),
-                      //jos jedan if i nova varijabla za sliku korisnika if imagefile==null da bude slika
-                      //i provjera za dugme if imagefile!=null da bude imagefile i omoguceno dugme ??
                       if (_imageFile != null)
                         Image.file(
                           _imageFile!,

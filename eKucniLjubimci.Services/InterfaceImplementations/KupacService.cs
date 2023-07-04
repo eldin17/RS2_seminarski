@@ -92,5 +92,12 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
             return _mapper.Map<List<DtoKupac>>(data);
         }
+
+        public async Task<DtoKupac> GetByKorisnickiNalogId(int korisnickiId)
+        {
+            var data = await _context.Set<Kupac>().Include(x => x.Osoba).Include(x => x.Lokacija).Include(x => x.KorisnickiNalog).ThenInclude(x => x.Uloga).FirstOrDefaultAsync(x => x.KorisnickiNalogId == korisnickiId);
+
+            return _mapper.Map<DtoKupac>(data);
+        }
     }
 }

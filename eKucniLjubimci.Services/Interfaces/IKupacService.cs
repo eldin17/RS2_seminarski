@@ -15,5 +15,7 @@ namespace eKucniLjubimci.Services.Interfaces
     {
         Task<DtoKupac> Delete(int id);
         Task<List<DtoKupac>> GetTop3();
+        Task<DtoKupac> GetByKorisnickiNalogId(int korisnickiId);
+
     }
 }

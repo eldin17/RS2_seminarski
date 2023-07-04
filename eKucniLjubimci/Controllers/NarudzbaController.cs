@@ -77,6 +77,11 @@ namespace eKucniLjubimci.Controllers
         {
             return await (_service as INarudzbaService).StripePayment(payment, id, ct);
         }
+        [HttpPost("AddPaymentFlutterStripe/{id}"), Authorize(Roles = "Kupac")]
+        public async Task<DtoNarudzba> AddPaymentFlutterStripe(int id)
+        {
+            return await (_service as INarudzbaService).Payment(id);
+        }
 
         [HttpGet("topLastMonth"), Authorize(Roles = "Prodavac")]
         public async Task<DtoNarudzba> GetTopLastMonth()
@@ -103,6 +108,11 @@ namespace eKucniLjubimci.Controllers
         public async Task<List<DtoNarudzba>> GetAllLastMonth()
         {
             return await (_service as INarudzbaService).GetAllLastMonth();
+        }
+        [HttpGet("getByKupac/{id}")]
+        public async Task<List<DtoNarudzba>> GetByKupac(int id)
+        {
+            return await (_service as INarudzbaService).GetByKupac(id);
         }
     }
 }

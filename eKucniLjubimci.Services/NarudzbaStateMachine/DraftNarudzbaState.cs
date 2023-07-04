@@ -184,7 +184,12 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
 
         public override async Task<DtoNarudzba> Delete(int narudzbaId)
         {
-            var dbObj = await _context.Set<Narudzba>().FindAsync(narudzbaId);
+            var dbObj = await _context.Set<Narudzba>().Include(x=>x.Zivotinje).FirstOrDefaultAsync(x=>x.NarudzbaId==narudzbaId);
+
+            foreach (var item in dbObj.Zivotinje)
+            {
+                item.StateMachine = "Active";
+            }
 
             dbObj.StateMachine = "Deleted";
 

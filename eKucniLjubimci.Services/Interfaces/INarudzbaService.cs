@@ -24,6 +24,7 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<DtoNarudzba> Cancel(int narudzbaId);
         Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct);
         Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct);
+        Task<DtoNarudzba> Payment(int narudzbaId);
 
         Task<List<string>> AllowedActions(int narudzbaId);
         Task<DtoNarudzba> GetTopLastMonth();
@@ -31,6 +32,8 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<decimal> GetTotalLastMonth();
         Task<decimal> GetTotalAllTime();
         Task<List<DtoNarudzba>> GetAllLastMonth();
+        Task<List<DtoNarudzba>> GetByKupac(int kupac);
+
 
     }
 }

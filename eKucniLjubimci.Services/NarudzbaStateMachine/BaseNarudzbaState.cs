@@ -109,7 +109,10 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         {
             throw new Exception("Action Not Allowed :(");
         }
-
+        public virtual async Task<DtoNarudzba> Payment(int narudzbaId)
+        {
+            throw new Exception("Action Not Allowed :(");
+        }
         public virtual async Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct)
         {
             throw new Exception("Action Not Allowed :(");

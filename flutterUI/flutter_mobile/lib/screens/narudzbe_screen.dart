@@ -118,6 +118,9 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
                                 trenutnaNarudzba.totalFinal! > 0
                                     ? (ElevatedButton(
                                         onPressed: () async {
+                                          var response =
+                                              await _narudzbeProvider.activate(
+                                                  NarudzbaInfo.narudzbaID!);
                                           Navigator.of(context).push(
                                             PageRouteBuilder(
                                               transitionDuration: Duration.zero,

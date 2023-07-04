@@ -175,6 +175,30 @@ class NarudzbeProvider with ChangeNotifier {
     }
   }
 
+  Future<Narudzba> addPayment(int id) async {
+    var url = "$_baseUrl$_endpoint/AddPaymentFlutterStripe/$id";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+      'accept': 'text/plain',
+    };
+    var uri = Uri.parse(url);
+
+    var response = await http.post(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return Narudzba.fromJson(data);
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
   Future<Narudzba> addArtikal(
       int narudzbaId, int artikalId, dynamic obj) async {
     var url = "$_baseUrl$_endpoint/$narudzbaId/AddArtikal/$artikalId";
@@ -348,6 +372,32 @@ class NarudzbeProvider with ChangeNotifier {
 
   Future<Narudzba> activate(int id) async {
     var url = "$_baseUrl$_endpoint/$id/activate";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.put(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = Narudzba.fromJson(data);
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
+  Future<Narudzba> cancel(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/cancel";
 
     var headers = {
       "Content-Type": "application/json",

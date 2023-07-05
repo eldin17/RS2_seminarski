@@ -84,6 +84,33 @@ class ProdavacProvider with ChangeNotifier {
     }
   }
 
+  Future<Prodavac> getByKorisnickiId(int id) async {
+    var url = "$_baseUrl$_endpoint/getByKorisnickiNalog/$id";
+
+    var headers = {
+      "Content-Type": "application/json",
+      'accept': 'text/plain',
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = Prodavac.fromJson(data);
+      print(result.toString());
+      return result;
+    } else {
+      throw Exception("Greska!");
+    }
+  }
+
   Future<void> addSlikaProdavca(int id, File image) async {
     try {
       var url = 'http://localhost:7152/api/Prodavac/addSlikaProdavca/$id';

@@ -87,19 +87,19 @@ class _ArtilkliScreenState extends State<ArtilkliScreen> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      labelText: "Cijena do",
+                      labelText: "Cijena od",
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    controller: _cijenaDoController,
+                    controller: _cijenaOdController,
                   ),
                 ),
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      labelText: "Cijena od",
+                      labelText: "Cijena do",
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    controller: _cijenaOdController,
+                    controller: _cijenaDoController,
                   ),
                 ),
               ],

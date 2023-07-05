@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_desktop/models/login_response.dart';
 import 'package:flutter_desktop/models/novost.dart';
 import 'package:flutter_desktop/providers/novosti_provider.dart';
+import 'package:flutter_desktop/providers/prodavac_provider.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class _NovostiAddState extends State<NovostiAdd> {
   Novost novost = Novost();
   final _formKeyNovost = GlobalKey<FormBuilderState>();
   late NovostiProvider _novostiProvider;
+  late ProdavacProvider _prodavciProvider;
 
   Map<String, dynamic> _initialValueNovost = {};
 
@@ -33,6 +35,7 @@ class _NovostiAddState extends State<NovostiAdd> {
     };
 
     _novostiProvider = context.read<NovostiProvider>();
+    _prodavciProvider = context.read<ProdavacProvider>();
   }
 
   @override
@@ -40,7 +43,6 @@ class _NovostiAddState extends State<NovostiAdd> {
     return Column(
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               children: [
@@ -68,19 +70,35 @@ class _NovostiAddState extends State<NovostiAdd> {
             children: [
               FilledButton(
                   onPressed: () async {
-                    _formKeyNovost.currentState?.saveAndValidate();
-                    print(_formKeyNovost.currentState?.value);
-
                     try {
-                      Map<String, dynamic> modifiedValue =
-                          Map<String, dynamic>.from(
-                              _formKeyNovost.currentState!.value);
-                      modifiedValue['prodavacId'] =
-                          LoginResponse.idLogiranogKorisnika;
-                      print("moje${modifiedValue}");
+                      if (_formKeyNovost.currentState?.saveAndValidate() ==
+                          true) {
+                        print(_formKeyNovost.currentState?.value);
+                        var prodavac =
+                            await _prodavciProvider.getByKorisnickiId(
+                                LoginResponse.idLogiranogKorisnika!);
 
-                      var responseArtikal =
-                          await _novostiProvider.add(modifiedValue);
+                        Map<String, dynamic> modifiedValue =
+                            Map<String, dynamic>.from(
+                                _formKeyNovost.currentState!.value);
+                        modifiedValue['prodavacId'] = prodavac.prodavacId;
+                        print("moje${modifiedValue}");
+
+                        var responseArtikal =
+                            await _novostiProvider.add(modifiedValue);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Uspjeh"),
+                                  content: Text("Uspjesno dodano"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Ok"),
+                                    )
+                                  ],
+                                ));
+                      }
                     } on Exception catch (e) {
                       // TODO
                       showDialog(
@@ -125,7 +143,7 @@ class _NovostiAddState extends State<NovostiAdd> {
               child: Column(
                 children: [
                   Container(
-                    width: 500,
+                    width: 700,
                     child: Row(
                       children: [
                         Expanded(
@@ -144,11 +162,11 @@ class _NovostiAddState extends State<NovostiAdd> {
                     ),
                   ),
                   Container(
-                    width: 500,
+                    width: 700,
                     child: Row(
                       children: [
                         Container(
-                          width: 500,
+                          width: 700,
                           child: FormBuilderTextField(
                             name: 'sadrzaj',
                             maxLines: 5,

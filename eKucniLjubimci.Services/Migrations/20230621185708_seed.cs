@@ -10,7 +10,7 @@ namespace eKucniLjubimci.Services.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
+
             migrationBuilder.InsertData(
                 table: "Kategorije",
                 columns: new[] { "KategorijaId", "Naziv", "isDeleted" },
@@ -224,23 +224,7 @@ namespace eKucniLjubimci.Services.Migrations
                     { 7, "Ptica","Papagaj","Papagaj je šareno pernato stvorenje s izražajnim kljunom, sposoban za ponavljanje riječi i zvukova, te je popularan kao kućni ljubimac zbog svoje inteligencije i druželjubivosti.","Plava", 1,  false,false },
                     { 8, "Ptica","Kanarinac","Kanarinac je mali pjevajući ptičji ljubimac s prepoznatljivim živopisnim perjem i slatkim pjevom, često se uzgaja zbog svoje ljepote i melodičnog glasa.","Zuta", 2, false, false },
                     { 9, "Ptica","Golub","Golub je ptica srednje veličine, poznata po svojoj sposobnosti letenja, vjernosti i izraženom društvenom ponašanju, često se koristi za golubarstvo i kao simbol mira.","Siva", 1,false , false },
-                });
-
-            migrationBuilder.InsertData(
-                table: "Zivotinje",
-                columns: new[] { "ZivotinjaId", "Naziv", "Napomena", "Cijena", "Dostupnost", "DatumPostavljanja", "StateMachine", "NarudzbaId", "VrstaId" },
-                values: new object[,]
-                {
-                    { 1, "Crni","",1300m,true,DateTime.UtcNow.AddDays(-10),"Active",null,1 },
-                    { 2, "Dzeki","",1200m,true,DateTime.UtcNow.AddDays(-15),"Active",null,2 },
-                    { 3, "Pujdo","",1001m,true,DateTime.UtcNow.AddDays(-2),"Active",null,3 },
-                    { 4, "Bela","",1000m,true,DateTime.UtcNow.AddDays(-7),"Active",null,4 },
-                    { 5, "Zlata","",1199m,true,DateTime.UtcNow.AddDays(-12),"Active",null,5 },
-                    { 6, "Ramzes","",1315m,true,DateTime.UtcNow.AddDays(-9),"Active",null,6 },
-                    { 7, "Dzek","",550m,true,DateTime.UtcNow.AddDays(-2),"Active",null,7 },
-                    { 8, "Halid","",460m,true,DateTime.UtcNow.AddDays(-5),"Active",null,8 },
-                    { 9, "Bobi","",250m,true,DateTime.UtcNow.AddDays(-14),"Active",null,9 },
-                });
+                });            
 
             migrationBuilder.InsertData(
                 table: "Kupci",
@@ -249,7 +233,7 @@ namespace eKucniLjubimci.Services.Migrations
                 {
                     { 1, 3, true,true,false,1,1,"http://localhost:7152/SlikeKupaca/slika1.jpg",3,false },
                     { 2, 2, false,false,true,2,2,"http://localhost:7152/SlikeKupaca/slika2.jpg",4,false },
-                    { 3, 1, false,true,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
+                    { 3, 10, false,true,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
                 });
 
             migrationBuilder.InsertData(
@@ -292,12 +276,21 @@ namespace eKucniLjubimci.Services.Migrations
                columns: new[] { "NarudzbaId", "DatumNarudzbe", "TotalFinal", "StateMachine", "KupacId" },
                values: new object[,]
                {
-                    { 1, DateTime.UtcNow.AddDays(-12),200m,"Done",1},
-                    { 2, DateTime.UtcNow.AddDays(-17),10m,"Done",1},
+                    {1, DateTime.UtcNow.AddDays(-12),200m,"Done",1},
+                    {2, DateTime.UtcNow.AddDays(-17),10m,"Done",1},
                     {3, DateTime.UtcNow.AddDays(-19), 250m, "Done", 1},
                     {4, DateTime.UtcNow.AddDays(-20), 300m, "Done", 2},
                     {5, DateTime.UtcNow.AddDays(-7), 25m, "Done", 2},
                     {6, DateTime.UtcNow.AddDays(-4), 10m, "Done", 3},
+                    {7, DateTime.UtcNow.AddDays(-1).AddMonths(-1),510m,"Draft",3},
+                    {8, DateTime.UtcNow.AddDays(-28).AddMonths(-1),560m,"Done",3},
+                    {9, DateTime.UtcNow.AddDays(-25).AddMonths(-1), 510m, "Done", 3},
+                    {10, DateTime.UtcNow.AddDays(-21).AddMonths(-1), 510m, "Draft", 3},
+                    {11, DateTime.UtcNow.AddDays(-5).AddMonths(-1), 560m, "Done", 3},
+                    {12, DateTime.UtcNow.AddDays(-9).AddMonths(-1), 510m, "Done", 3},
+                    {13, DateTime.UtcNow.AddDays(-18).AddMonths(-1), 210m, "Draft", 3},
+                    {14, DateTime.UtcNow.AddDays(-12).AddMonths(-1), 210m, "Done", 3},
+                    {15, DateTime.UtcNow.AddDays(-10).AddMonths(-1), 210m, "Draft", 3},
                });
 
             migrationBuilder.InsertData(
@@ -311,7 +304,70 @@ namespace eKucniLjubimci.Services.Migrations
                     { 4, 4, 10 },
                     { 5, 5, 16 },
                     { 6, 6, 21 },
+
+                    { 7, 7, 3 },
+                    { 8, 7, 10 },
+                    { 9, 7, 17 },
+
+                    { 10, 8, 2 },
+                    { 11, 8, 10 },
+                    { 12, 8, 17 },
+                    
+                    { 13, 9, 3 },
+                    { 14, 9, 10 },
+                    { 15, 9, 17 },
+                    
+                    { 16, 10, 6 },
+                    { 17, 10, 12 },
+                    { 18, 10, 19 },
+                    
+                    { 19, 11, 5 },
+                    { 20, 11, 12 },
+                    { 21, 11, 19 },
+                    
+                    { 22, 12, 6 },
+                    { 23, 12, 12 },
+                    { 24, 12, 19 },
+                    
+                    { 25, 13, 14 },
+                    { 26, 13, 8 },
+                    { 27, 13, 21 },
+                    
+                    { 28, 14, 14 },
+                    { 29, 14, 8  },
+                    { 30, 14, 21 },
+                    
+                    { 31, 15, 14 },
+                    { 32, 15, 8  },
+                    { 33, 15, 21 },
+                    
                });
+
+            migrationBuilder.InsertData(
+                table: "Zivotinje",
+                columns: new[] { "ZivotinjaId", "Naziv", "Napomena", "Cijena", "Dostupnost", "DatumPostavljanja", "StateMachine", "NarudzbaId", "VrstaId" },
+                values: new object[,]
+                {
+                    { 1, "Crni","",1300m,true,DateTime.UtcNow.AddDays(-10),"Active",null,1 },
+                    { 2, "Dzeki","",1200m,true,DateTime.UtcNow.AddDays(-15),"Active",null,2 },
+                    { 3, "Pujdo","",1001m,true,DateTime.UtcNow.AddDays(-2),"Active",null,3 },
+                    { 4, "Bela","",1000m,true,DateTime.UtcNow.AddDays(-7),"Active",null,4 },
+                    { 5, "Zlata","",1199m,true,DateTime.UtcNow.AddDays(-12),"Active",null,5 },
+                    { 6, "Ramzes","",1315m,true,DateTime.UtcNow.AddDays(-9),"Active",null,6 },
+                    { 7, "Dzek","",550m,true,DateTime.UtcNow.AddDays(-2),"Active",null,7 },
+                    { 8, "Halid","",460m,true,DateTime.UtcNow.AddDays(-5),"Active",null,8 },
+                    { 9, "Bobi","",250m,true,DateTime.UtcNow.AddDays(-14),"Active",null,9 },
+
+                    { 10, "Crni2","",100m,true,DateTime.UtcNow.AddDays(-12).AddMonths(-1),"Reserved",7,1 },
+                    { 11, "Dzeki2","",100m,true,DateTime.UtcNow.AddDays(-11).AddMonths(-1),"Sold",8,2 },
+                    { 12, "Pujdo2","",100m,true,DateTime.UtcNow.AddDays(-5).AddMonths(-1),"Sold",9,3 },
+                    { 13, "Bela2","",100m,true,DateTime.UtcNow.AddDays(-13).AddMonths(-1),"Reserved",10,4 },
+                    { 14, "Zlata2","",100m,true,DateTime.UtcNow.AddDays(-1).AddMonths(-1),"Sold",11,5 },
+                    { 15, "Ramzes2","",100m,true,DateTime.UtcNow.AddDays(-9).AddMonths(-1),"Sold",12,6 },
+                    { 16, "Dzek2","",100m,true,DateTime.UtcNow.AddDays(-17).AddMonths(-1),"Reserved",13,7 },
+                    { 17, "Halid2","",100m,true,DateTime.UtcNow.AddDays(-25).AddMonths(-1),"Sold",14,8 },
+                    { 18, "Bobi2","",100m,true,DateTime.UtcNow.AddDays(-21).AddMonths(-1),"Reserved",15,9 },
+                });
 
             migrationBuilder.InsertData(
                table: "Slike",
@@ -357,6 +413,24 @@ namespace eKucniLjubimci.Services.Migrations
                     { 37, "Kanarinac2","http://localhost:7152/SlikeZivotinja/Kanarinac2.jpg",null,8,false },
                     { 38, "Golub1","http://localhost:7152/SlikeZivotinja/Golub1.jpg",null,9,false },
                     { 39, "Golub2","http://localhost:7152/SlikeZivotinja/Golub2.jpg",null,9,false },
+                    { 40, "Sarplaninac1","http://localhost:7152/SlikeZivotinja/Sarplaninac1.jpg",null,10,false },
+                    { 41, "Sarplaninac2","http://localhost:7152/SlikeZivotinja/Sarplaninac2.jpg",null,10,false },
+                    { 42, "Labrador1","http://localhost:7152/SlikeZivotinja/Labrador1.jpg",null,11,false },
+                    { 43, "Labrador2","http://localhost:7152/SlikeZivotinja/Labrador2.jpg",null,11,false },
+                    { 44, "Dalmatinac1","http://localhost:7152/SlikeZivotinja/Dalmatinac1.jpg",null,12,false },
+                    { 45, "Dalmatinac2","http://localhost:7152/SlikeZivotinja/Dalmatinac2.jpg",null,12,false },
+                    { 46, "Perzijska1","http://localhost:7152/SlikeZivotinja/Perzijska1.jpg",null,13,false },
+                    { 47, "Perzijska2","http://localhost:7152/SlikeZivotinja/Perzijska2.jpg",null,13,false },
+                    { 48, "Abesinska1","http://localhost:7152/SlikeZivotinja/Abesinska1.jpg",null,14,false },
+                    { 49, "Abesinska2","http://localhost:7152/SlikeZivotinja/Abesinska2.jpg",null,14,false },
+                    { 50, "Egipatska1","http://localhost:7152/SlikeZivotinja/Egipatska1.jpg",null,15,false },
+                    { 51, "Egipatska2","http://localhost:7152/SlikeZivotinja/Egipatska2.jpg",null,15,false },
+                    { 52, "Papagaj1","http://localhost:7152/SlikeZivotinja/Papagaj1.jpg",null,16,false },
+                    { 53, "Papagaj2","http://localhost:7152/SlikeZivotinja/Papagaj2.jpg",null,16,false },
+                    { 54, "Kanarinac1","http://localhost:7152/SlikeZivotinja/Kanarinac1.jpg",null,17,false },
+                    { 55, "Kanarinac2","http://localhost:7152/SlikeZivotinja/Kanarinac2.jpg",null,17,false },
+                    { 56, "Golub1","http://localhost:7152/SlikeZivotinja/Golub1.jpg",null,18,false },
+                    { 57, "Golub2","http://localhost:7152/SlikeZivotinja/Golub2.jpg",null,18,false },
                });
         }
 

@@ -81,19 +81,19 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      labelText: "Total do",
+                      labelText: "Total od",
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    controller: _totalDoController,
+                    controller: _totalOdController,
                   ),
                 ),
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      labelText: "Total od",
+                      labelText: "Total do",
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    controller: _totalOdController,
+                    controller: _totalDoController,
                   ),
                 ),
               ],

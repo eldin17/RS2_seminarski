@@ -146,7 +146,7 @@ class _LoginPage2State extends State<LoginPage2> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                                  title: (Text("Error")),
+                                  title: (Text("Greska")),
                                   content: Text(e.toString()),
                                   actions: [
                                     TextButton(

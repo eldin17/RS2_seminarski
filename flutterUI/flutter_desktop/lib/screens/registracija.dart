@@ -130,25 +130,28 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 0
                       ? () async {
-                          _formKeyOsoba.currentState?.saveAndValidate();
-                          print(_formKeyOsoba.currentState?.value);
-
                           try {
-                            var selectedDate =
-                                DateTime.parse(dateController.text);
-                            Map<String, dynamic> formData =
-                                Map<String, dynamic>.from(
-                                    _formKeyOsoba.currentState!.value);
-                            formData['datumRodjenja'] =
-                                selectedDate.toUtc().toIso8601String();
+                            if (_formKeyOsoba.currentState?.saveAndValidate() ==
+                                true) {
+                              _formKeyOsoba.currentState?.saveAndValidate();
+                              print(_formKeyOsoba.currentState?.value);
 
-                            var response = await _osobaProvider
-                                .add(Osoba.fromJson(formData));
+                              var selectedDate =
+                                  DateTime.parse(dateController.text);
+                              Map<String, dynamic> formData =
+                                  Map<String, dynamic>.from(
+                                      _formKeyOsoba.currentState!.value);
+                              formData['datumRodjenja'] =
+                                  selectedDate.toUtc().toIso8601String();
 
-                            osobaIdhelper = response.osobaId!;
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                              var response = await _osobaProvider
+                                  .add(Osoba.fromJson(formData));
+
+                              osobaIdhelper = response.osobaId!;
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -171,24 +174,27 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 1
                       ? () async {
-                          _formKeyKorisnickiNalog.currentState
-                              ?.saveAndValidate();
-                          print(_formKeyKorisnickiNalog.currentState?.value);
-
                           try {
-                            var formData = Map<String, dynamic>.from(
-                                _formKeyKorisnickiNalog.currentState!.value);
+                            if (_formKeyKorisnickiNalog.currentState
+                                    ?.saveAndValidate() ==
+                                true) {
+                              print(
+                                  _formKeyKorisnickiNalog.currentState?.value);
 
-                            formData['ulogaId'] = 1;
+                              var formData = Map<String, dynamic>.from(
+                                  _formKeyKorisnickiNalog.currentState!.value);
 
-                            var response = await _loginRegisterProvider
-                                .register(RegisterModel.fromJson(formData));
+                              formData['ulogaId'] = 1;
 
-                            korisnickiNalogIdhelper =
-                                response.korisnickiNalogId!;
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                              var response = await _loginRegisterProvider
+                                  .register(RegisterModel.fromJson(formData));
+
+                              korisnickiNalogIdhelper =
+                                  response.korisnickiNalogId!;
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -211,24 +217,27 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 2
                       ? () async {
-                          _formKeyProdavac.currentState?.saveAndValidate();
-                          print(_formKeyProdavac.currentState?.value);
-
                           try {
-                            var formData = Map<String, dynamic>.from(
-                                _formKeyProdavac.currentState!.value);
+                            if (_formKeyProdavac.currentState
+                                    ?.saveAndValidate() ==
+                                true) {
+                              print(_formKeyProdavac.currentState?.value);
 
-                            formData['osobaId'] = osobaIdhelper;
-                            formData['korisnickiNalogId'] =
-                                korisnickiNalogIdhelper;
-                            print("moje${formData}");
+                              var formData = Map<String, dynamic>.from(
+                                  _formKeyProdavac.currentState!.value);
 
-                            var response = await _prodavacProvider
-                                .add(Prodavac.fromJson(formData));
-                            prodavacIdhelper = response.prodavacId!;
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                              formData['osobaId'] = osobaIdhelper;
+                              formData['korisnickiNalogId'] =
+                                  korisnickiNalogIdhelper;
+                              print("moje${formData}");
+
+                              var response = await _prodavacProvider
+                                  .add(Prodavac.fromJson(formData));
+                              prodavacIdhelper = response.prodavacId!;
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -249,18 +258,30 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                       : null,
                   child: Text("3.Dodaj prodavca")),
               ElevatedButton(
-                onPressed:
-                    buttonProgressNotifier.value == 3 && _imageFile != null
-                        ? () async {
-                            if (_formKey.currentState!.saveAndValidate()) {
-                              _prodavacProvider.addSlikaProdavca(
-                                  prodavacIdhelper, _imageFile!);
-                              setState(() {
-                                buttonProgressNotifier.value++;
-                              });
-                            }
-                          }
-                        : null,
+                onPressed: buttonProgressNotifier.value == 3 &&
+                        _imageFile != null
+                    ? () async {
+                        if (_formKey.currentState!.saveAndValidate()) {
+                          _prodavacProvider.addSlikaProdavca(
+                              prodavacIdhelper, _imageFile!);
+                          setState(() {
+                            buttonProgressNotifier.value++;
+                          });
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Uspjeh"),
+                                    content: Text("Uspjesna registracija"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Ok"),
+                                      )
+                                    ],
+                                  ));
+                        }
+                      }
+                    : null,
                 child: Text('4.Postavi sliku'),
               ),
               ElevatedButton(

@@ -7,6 +7,8 @@ import 'package:flutter_desktop/models/search_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+import '../models/prodavac.dart';
+
 class NovostiProvider with ChangeNotifier {
   static String? _baseUrl;
   String _endpoint = "api/Novost";

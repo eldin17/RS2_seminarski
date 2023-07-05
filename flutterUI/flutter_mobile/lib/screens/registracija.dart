@@ -332,7 +332,7 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                           var formData = Map<String, dynamic>.from(
                               _formKeyKorisnickiNalog.currentState!.value);
 
-                          formData['ulogaId'] = 1;
+                          formData['ulogaId'] = 2;
 
                           var response = await _loginRegisterProvider
                               .register(RegisterModel.fromJson(formData));
@@ -646,6 +646,18 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                         setState(() {
                           buttonProgressNotifier.value++;
                         });
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Uspjeh"),
+                                  content: Text("Uspjesna registracija"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Ok"),
+                                    )
+                                  ],
+                                ));
                       }
                     }
                   : null,

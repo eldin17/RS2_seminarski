@@ -117,27 +117,43 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
             children: [
               FilledButton(
                   onPressed: () async {
-                    _formKeyVrsta.currentState?.saveAndValidate();
-                    print(_formKeyVrsta.currentState?.value);
-                    _formKeyZivotinja.currentState?.saveAndValidate();
-                    print(_formKeyZivotinja.currentState?.value);
-                    _formKey.currentState?.saveAndValidate();
-
                     try {
-                      await _vrstaProvider.update(widget.vrsta.vrstaId!,
-                          Vrsta.fromJson(_formKeyVrsta.currentState!.value));
+                      if (_formKeyVrsta.currentState?.saveAndValidate() ==
+                              true &&
+                          _formKeyZivotinja.currentState?.saveAndValidate() ==
+                              true &&
+                          _formKey.currentState?.saveAndValidate() == true) {
+                        print(_formKeyVrsta.currentState?.value);
+                        print(_formKeyZivotinja.currentState?.value);
 
-                      Map<String, dynamic> modifiedValue =
-                          Map<String, dynamic>.from(
-                              _formKeyZivotinja.currentState!.value);
-                      modifiedValue['vrstaId'] = widget.vrsta.vrstaId;
-                      print("moje${modifiedValue}");
+                        await _vrstaProvider.update(widget.vrsta.vrstaId!,
+                            Vrsta.fromJson(_formKeyVrsta.currentState!.value));
 
-                      await _zivotinjeProvider.update(
-                          widget.zivotinja.zivotinjaId!, modifiedValue);
+                        Map<String, dynamic> modifiedValue =
+                            Map<String, dynamic>.from(
+                                _formKeyZivotinja.currentState!.value);
+                        modifiedValue['vrstaId'] = widget.vrsta.vrstaId;
+                        print("moje${modifiedValue}");
 
-                      if (_selectedImages.isNotEmpty) {
-                        await _submitForm(context);
+                        await _zivotinjeProvider.update(
+                            widget.zivotinja.zivotinjaId!, modifiedValue);
+
+                        if (_selectedImages.isNotEmpty) {
+                          await _submitForm(context);
+                        }
+
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Uspjeh"),
+                                  content: Text("Promjene spasene"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Ok"),
+                                    )
+                                  ],
+                                ));
                       }
                     } on Exception catch (e) {
                       // TODO
@@ -350,12 +366,6 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
                       name: 'napomena',
                       maxLines: 2,
                       decoration: InputDecoration(labelText: "Napomena"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Opis je obavezan';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                   Container(

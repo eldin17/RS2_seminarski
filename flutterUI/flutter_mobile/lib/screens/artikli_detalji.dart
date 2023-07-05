@@ -244,6 +244,21 @@ Column podaci(BuildContext context, Artikal artikal, Kupac kupac,
                                       Navigator.of(context).pop();
                                       print(
                                           'Odabrana kolicina: ${kolicina.value}');
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                title: Text("Uspjeh"),
+                                                content: Text(
+                                                    "Uspjesno dodano\nProvjerite Vase narudzbe"),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: Text("Ok"),
+                                                  )
+                                                ],
+                                              ));
                                     },
                                   ),
                                 ],

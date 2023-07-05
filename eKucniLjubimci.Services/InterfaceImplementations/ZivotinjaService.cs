@@ -9,8 +9,13 @@ using eKucniLjubimci.Services.NarudzbaStateMachine;
 using eKucniLjubimci.Services.ZivotinjaStateMachine;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +43,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         }
         public override IQueryable<Zivotinja> AddFilter(IQueryable<Zivotinja> data, SearchZivotinja? search)
         {
-            data = data.Where(x => x.StateMachine != "Deleted").Where(x=>x.Slike.Count>0);
+            data = data.Where(x => x.StateMachine != "Deleted").Where(x=>x.Slike.Count>0).OrderByDescending(x=>x.Naziv);
             if (!string.IsNullOrWhiteSpace(search.Rasa))
             {
                 data = data.Where(x => x.Vrsta.Rasa.Contains(search.Rasa));
@@ -110,5 +115,100 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var state = _baseZivotinjaState.GetState(zivotinja.StateMachine);
             return await state.Dostupnost(id, dostupnost);
         }
+
+
+        static MLContext mlContext = null;
+        static object isLocked = new object();
+        static ITransformer model = null;
+
+        public List<DtoArtikal> Recommend(int id)
+        {
+            lock (isLocked)
+            {
+                mlContext = new MLContext();
+
+                var dataDB = _context.Narudzbe
+                    .Include(x => x.Zivotinje).ThenInclude(x => x.Slike)
+                    .Include(x => x.NarudzbeArtikli).ThenInclude(x => x.Artikal).ThenInclude(x => x.Slike).ToList();
+
+                var data = new List<ProductEntry>();
+
+                foreach (var narudzba in dataDB)
+                {
+                    if (narudzba.Zivotinje.Count > 0 && narudzba.NarudzbeArtikli.Count > 0)
+                    {
+                        foreach (var artikal in narudzba.NarudzbeArtikli)
+                        {
+                            foreach (var zivotinja in narudzba.Zivotinje)
+                            {
+                                data.Add(new ProductEntry()
+                                {
+                                    ProductID = (uint)zivotinja.ZivotinjaId,
+                                    CoPurchaseProductID = (uint)artikal.ArtikalId,
+                                });
+                            }
+                        }
+                        
+                    }
+                }
+
+                var trainData = mlContext.Data.LoadFromEnumerable(data);
+
+                //STEP 3: Your data is already encoded so all you need to do is specify options for MatrxiFactorizationTrainer with a few extra hyperparameters
+                //        LossFunction, Alpa, Lambda and a few others like K and C as shown below and call the trainer.
+                MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
+                options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
+                options.MatrixRowIndexColumnName = nameof(ProductEntry.CoPurchaseProductID);
+                options.LabelColumnName = "Label";
+                options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
+                options.Alpha = 0.0051;
+                options.Lambda = 0.025;
+                // For better results use the following parameters
+                //options.NumberOfIterations = 100;
+                //options.C = 0.00001;
+
+                var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+                model = est.Fit(trainData);
+            }
+
+
+            var sviArtikli = _context.Artikli.Where(x => x.StateMachine != "Deleted");
+
+            var rezultat = new List<Tuple<Artikal, float>>();
+
+            foreach (var artikal in sviArtikli)
+            {
+                var predictionengine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
+                var prediction = predictionengine.Predict(
+                                         new ProductEntry()
+                                         {
+                                             ProductID = (uint)id,
+                                             CoPurchaseProductID = (uint)artikal.ArtikalId
+                                         });
+
+                rezultat.Add(new Tuple<Artikal, float>(artikal, prediction.Score));
+            }
+
+            var finalRezultat = rezultat.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(2).ToList();
+
+            return _mapper.Map<List<DtoArtikal>>(finalRezultat);
+        }
+
+    }
+    public class Copurchase_prediction
+    {
+        public float Score { get; set; }
+    }
+
+    public class ProductEntry
+    {
+        [KeyType(count: 50)]
+        public uint ProductID { get; set; }
+
+        [KeyType(count: 50)]
+        public uint CoPurchaseProductID { get; set; }
+
+        public float Label { get; set; }
     }
 }

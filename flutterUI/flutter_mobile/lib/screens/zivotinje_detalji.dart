@@ -5,12 +5,15 @@ import 'package:flutter_mobile/providers/kupac_provider.dart';
 import 'package:flutter_mobile/providers/zivotinje_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/artikal.dart';
 import '../models/kupac.dart';
 import '../models/narudzba_info.dart';
 import '../models/vrsta.dart';
 import '../models/zivotinja.dart';
 import '../providers/narudzbe_provider.dart';
 import '../util/util.dart';
+import '../widgets/master_screen.dart';
+import 'artikli_detalji.dart';
 
 class ZivotinjeDetalji extends StatefulWidget {
   Zivotinja zivotinja = Zivotinja();
@@ -30,6 +33,8 @@ class _ZivotinjeDetaljiState extends State<ZivotinjeDetalji> {
   late ZivotinjeProvider _zivotinjeProvider;
   ValueNotifier<int> kolicina = ValueNotifier<int>(1);
   Vrsta? vrsta2 = Vrsta();
+  List<Artikal> artikli = [];
+  bool isLoading2 = true;
 
   @override
   void initState() {
@@ -46,9 +51,13 @@ class _ZivotinjeDetaljiState extends State<ZivotinjeDetalji> {
     widget.vrsta = obj.vrsta;
     var novi = await _kupciProvider
         .getByKorisnickiId(LoginResponse.idLogiranogKorisnika!);
+    var preporuka = await _zivotinjeProvider
+        .getRecommendation(widget.zivotinja.zivotinjaId!);
     setState(() {
       kupac = novi;
       isLoading = false;
+      artikli = preporuka;
+      isLoading2 = false;
     });
   }
 
@@ -69,6 +78,49 @@ class _ZivotinjeDetaljiState extends State<ZivotinjeDetalji> {
                     ? Container()
                     : podaci(context, widget.zivotinja, kupac,
                         _narudzbeProvider, kolicina, widget.vrsta),
+                SizedBox(
+                  height: 50,
+                ),
+                isLoading2
+                    ? Container()
+                    : Column(
+                        children: [
+                          Container(
+                            width: 350,
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                "Mozda Vas interesuje nesto iz nase ponude?",
+                                style: TextStyle(
+                                    fontSize: 16, fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(colors: [
+                                Color.fromRGBO(225, 255, 216, 1),
+                                Color.fromRGBO(231, 252, 232, 0.6)
+                              ]),
+                            ),
+                          ),
+                          Container(
+                            height: 270,
+                            child: GridView(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 1,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10),
+                              scrollDirection: Axis.horizontal,
+                              children: _recommended(context, artikli),
+                            ),
+                          ),
+                        ],
+                      ),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ),
           ),
@@ -277,6 +329,19 @@ Column podaci(
                     if (NarudzbaInfo.narudzbaID != null) {
                       var response = await _narudzbeProvider.addZivotinja(
                           NarudzbaInfo.narudzbaID!, zivotinja.zivotinjaId!);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: Text("Uspjeh"),
+                                content: Text(
+                                    "Uspjesno dodano\nProvjerite Vase narudzbe"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("Ok"),
+                                  )
+                                ],
+                              ));
                     }
                   },
                   child: Text("Dodaj na narudzbu")),
@@ -327,4 +392,64 @@ Container slike(Zivotinja zivotinja) {
       ),
     ),
   );
+}
+
+List<Widget> _recommended(BuildContext context, List<Artikal> artikli) {
+  List<Widget> list = artikli
+      .map((x) => Container(
+            height: 270,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(225, 255, 216, 1),
+                  Color.fromRGBO(231, 252, 232, 0.6)
+                ])),
+            child: Container(
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: Duration.zero,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  MasterScreen(
+                            child: ArtikliDetalji(
+                              artikal: x,
+                            ),
+                            index: 0,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 180,
+                      width: 280,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            10), // Set the border radius here
+                        child: Image.network(
+                          obradiSliku(x.slike![0].putanja!),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(x.naziv ?? ""),
+                  Text(
+                    "${formatNumber(x.cijena)} KM",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ))
+      .cast<Widget>()
+      .toList();
+
+  return list;
 }

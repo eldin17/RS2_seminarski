@@ -109,17 +109,32 @@ class _ArtikliEditState extends State<ArtikliEdit> {
             children: [
               FilledButton(
                   onPressed: () async {
-                    _formKeyArtikal.currentState?.saveAndValidate();
-                    _formKey.currentState?.saveAndValidate();
-                    print(_formKeyArtikal.currentState?.value);
-
                     try {
-                      var responseArtikal = await _artikliProvider.update(
-                          widget.artikal.artikalId!,
-                          _formKeyArtikal.currentState?.value);
+                      if (_formKeyArtikal.currentState?.saveAndValidate() ==
+                              true &&
+                          _formKey.currentState?.saveAndValidate() == true) {
+                        _formKey.currentState?.saveAndValidate();
+                        print(_formKeyArtikal.currentState?.value);
 
-                      if (_selectedImages.isNotEmpty) {
-                        await _submitForm(context);
+                        var responseArtikal = await _artikliProvider.update(
+                            widget.artikal.artikalId!,
+                            _formKeyArtikal.currentState?.value);
+
+                        if (_selectedImages.isNotEmpty) {
+                          await _submitForm(context);
+                        }
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Uspjeh"),
+                                  content: Text("Promjene sacuvane"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Ok"),
+                                    )
+                                  ],
+                                ));
                       }
                     } on Exception catch (e) {
                       // TODO

@@ -109,30 +109,34 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 0
                       ? () async {
-                          _formKeyVrsta.currentState?.saveAndValidate();
-                          print(_formKeyVrsta.currentState?.value);
-                          _formKeyZivotinja.currentState?.saveAndValidate();
-                          print(_formKeyZivotinja.currentState?.value);
                           try {
-                            var response = await _vrstaProvider.add(
-                                Vrsta.fromJson(
-                                    _formKeyVrsta.currentState!.value));
+                            if (_formKeyVrsta.currentState?.saveAndValidate() ==
+                                    true &&
+                                _formKeyZivotinja.currentState
+                                        ?.saveAndValidate() ==
+                                    true) {
+                              print(_formKeyVrsta.currentState?.value);
+                              print(_formKeyZivotinja.currentState?.value);
+                              var response = await _vrstaProvider.add(
+                                  Vrsta.fromJson(
+                                      _formKeyVrsta.currentState!.value));
 
-                            vrstaIdhelper = response.vrstaId!;
+                              vrstaIdhelper = response.vrstaId!;
 
-                            // var modifiedValue = Map<String, dynamic>.from(
-                            //     _formKeyZivotinja.currentState!.value);
+                              // var modifiedValue = Map<String, dynamic>.from(
+                              //     _formKeyZivotinja.currentState!.value);
 
-                            // modifiedValue['vrstaId'] = vrstaIdhelper;
-                            // print("moje${modifiedValue}");
+                              // modifiedValue['vrstaId'] = vrstaIdhelper;
+                              // print("moje${modifiedValue}");
 
-                            // await Future.delayed((Duration(seconds: 10)));
+                              // await Future.delayed((Duration(seconds: 10)));
 
-                            // var responseZivotinja = await _zivotinjeProvider
-                            //     .add(Zivotinja.fromJson(modifiedValue));
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                              // var responseZivotinja = await _zivotinjeProvider
+                              //     .add(Zivotinja.fromJson(modifiedValue));
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -155,25 +159,29 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 1
                       ? () async {
-                          _formKeyVrsta.currentState?.saveAndValidate();
-                          print(_formKeyVrsta.currentState?.value);
-
-                          _formKeyZivotinja.currentState?.saveAndValidate();
-                          print(_formKeyZivotinja.currentState?.value);
-
                           try {
-                            Map<String, dynamic> modifiedValue =
-                                Map<String, dynamic>.from(
-                                    _formKeyZivotinja.currentState!.value);
-                            modifiedValue['vrstaId'] = vrstaIdhelper;
-                            print("moje${modifiedValue}");
+                            if (_formKeyVrsta.currentState?.saveAndValidate() ==
+                                    true &&
+                                _formKeyZivotinja.currentState
+                                        ?.saveAndValidate() ==
+                                    true) {
+                              print(_formKeyVrsta.currentState?.value);
+                              print(_formKeyZivotinja.currentState?.value);
 
-                            var responseZivotinja =
-                                await _zivotinjeProvider.add(modifiedValue);
-                            zivotinjaIdhelper = responseZivotinja.zivotinjaId!;
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                              Map<String, dynamic> modifiedValue =
+                                  Map<String, dynamic>.from(
+                                      _formKeyZivotinja.currentState!.value);
+                              modifiedValue['vrstaId'] = vrstaIdhelper;
+                              print("moje${modifiedValue}");
+
+                              var responseZivotinja =
+                                  await _zivotinjeProvider.add(modifiedValue);
+                              zivotinjaIdhelper =
+                                  responseZivotinja.zivotinjaId!;
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -200,7 +208,19 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                           await _submitForm(context),
                           setState(() {
                             buttonProgressNotifier.value++;
-                          })
+                          }),
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Uspjeh"),
+                                    content: Text("Uspjesno dodavanje"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Ok"),
+                                      )
+                                    ],
+                                  )),
                         }
                     : null,
                 child: Text('3.Postavi slike'),
@@ -392,12 +412,6 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                       name: 'napomena',
                       maxLines: 2,
                       decoration: InputDecoration(labelText: "Napomena"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Napomena je obavezna';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                   Container(

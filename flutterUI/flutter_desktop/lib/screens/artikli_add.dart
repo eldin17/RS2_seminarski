@@ -110,16 +110,19 @@ class _ArtikliAddState extends State<ArtikliAdd> {
               FilledButton(
                   onPressed: buttonProgressNotifier.value == 0
                       ? () async {
-                          _formKeyArtikal.currentState?.saveAndValidate();
-                          print(_formKeyArtikal.currentState?.value);
-
                           try {
-                            var responseArtikal = await _artikliProvider
-                                .add(_formKeyArtikal.currentState?.value);
-                            artikalIdhelper = responseArtikal.artikalId!;
-                            setState(() {
-                              buttonProgressNotifier.value++;
-                            });
+                            if (_formKeyArtikal.currentState
+                                    ?.saveAndValidate() ==
+                                true) {
+                              print(_formKeyArtikal.currentState?.value);
+
+                              var responseArtikal = await _artikliProvider
+                                  .add(_formKeyArtikal.currentState?.value);
+                              artikalIdhelper = responseArtikal.artikalId!;
+                              setState(() {
+                                buttonProgressNotifier.value++;
+                              });
+                            }
                           } on Exception catch (e) {
                             // TODO
                             showDialog(
@@ -146,7 +149,19 @@ class _ArtikliAddState extends State<ArtikliAdd> {
                           await _submitForm(context),
                           setState(() {
                             buttonProgressNotifier.value++;
-                          })
+                          }),
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Uspjeh"),
+                                    content: Text("Uspjesno dodavanje"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Ok"),
+                                      )
+                                    ],
+                                  )),
                         }
                     : null,
                 child: Text('2.Postavi slike'),
@@ -268,6 +283,12 @@ class _ArtikliAddState extends State<ArtikliAdd> {
                                     ))
                                 .toList() ??
                             [],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Kategorija je obavezna';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),

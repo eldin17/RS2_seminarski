@@ -111,7 +111,11 @@ namespace eKucniLjubimci.Controllers
             return Ok(obj);
         }
 
-
+        [HttpGet("{id}/recommend")]
+        public virtual List<DtoArtikal>Recommend(int id)
+        {
+            return (_service as IZivotinjaService).Recommend(id);
+        }
         
     }
 }

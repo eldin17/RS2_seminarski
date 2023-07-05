@@ -379,63 +379,67 @@ class _ProfilEditState extends State<ProfilEdit> {
               width: 325,
               child: FilledButton(
                   onPressed: () async {
-                    _formKeyKupac.currentState?.saveAndValidate();
-                    _formKeyLokacija.currentState?.saveAndValidate();
-                    _formKeyOsoba.currentState?.saveAndValidate();
-                    _formKey.currentState?.saveAndValidate();
-                    print(_formKeyKupac.currentState?.value);
-                    print(_formKeyLokacija.currentState?.value);
-                    print(_formKeyOsoba.currentState?.value);
-
                     try {
-                      var selectedDate = DateTime.parse(dateController.text);
+                      if (_formKeyOsoba.currentState?.saveAndValidate() == true &&
+                          _formKeyLokacija.currentState?.saveAndValidate() ==
+                              true &&
+                          _formKeyKupac.currentState?.saveAndValidate() ==
+                              true &&
+                          _formKey.currentState?.saveAndValidate() == true) {
+                        print(_formKeyOsoba.currentState?.value);
+                        print(_formKeyLokacija.currentState?.value);
+                        print(_formKeyKupac.currentState?.value);
 
-                      Map<String, dynamic> formData = Map<String, dynamic>.from(
-                          _formKeyOsoba.currentState!.value);
-                      formData['datumRodjenja'] =
-                          selectedDate.toUtc().toIso8601String();
+                        var selectedDate = DateTime.parse(dateController.text);
 
-                      var responseOsoba = await _osobaProvider.update(
-                          widget.osobaid, Osoba.fromJson(formData));
+                        Map<String, dynamic> formData =
+                            Map<String, dynamic>.from(
+                                _formKeyOsoba.currentState!.value);
+                        formData['datumRodjenja'] =
+                            selectedDate.toUtc().toIso8601String();
 
-                      var responseLokacija = await _lokacijaProvider.update(
-                          widget.lokacijaid,
-                          Lokacija.fromJson(
-                              _formKeyLokacija.currentState!.value));
+                        var responseOsoba = await _osobaProvider.update(
+                            widget.osobaid, Osoba.fromJson(formData));
 
-                      var responseKupac = await _kupacProvider.update(
-                          widget.kupacid,
-                          Kupac.fromJson(_formKeyKupac.currentState!.value));
+                        var responseLokacija = await _lokacijaProvider.update(
+                            widget.lokacijaid,
+                            Lokacija.fromJson(
+                                _formKeyLokacija.currentState!.value));
 
-                      if (_imageFile != null) {
-                        _kupacProvider.addSlikaKupca(
-                            widget.kupacid, _imageFile!);
-                      }
+                        var responseKupac = await _kupacProvider.update(
+                            widget.kupacid,
+                            Kupac.fromJson(_formKeyKupac.currentState!.value));
 
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (BuildContext context) => AlertDialog(
-                      //           title: Text("Uspjeh"),
-                      //           content: Text("Uspjesan edit"),
-                      //           actions: [
-                      //             TextButton(
-                      //               onPressed: () => Navigator.pop(context),
-                      //               child: Text("Ok"),
-                      //             )
-                      //           ],
-                      //         ));
+                        if (_imageFile != null) {
+                          _kupacProvider.addSlikaKupca(
+                              widget.kupacid, _imageFile!);
+                        }
 
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          transitionDuration: Duration.zero,
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  MasterScreen(
-                            child: ProfilScreen(),
-                            index: 0,
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) => AlertDialog(
+                        //           title: Text("Uspjeh"),
+                        //           content: Text("Uspjesan edit"),
+                        //           actions: [
+                        //             TextButton(
+                        //               onPressed: () => Navigator.pop(context),
+                        //               child: Text("Ok"),
+                        //             )
+                        //           ],
+                        //         ));
+
+                        Navigator.of(context).pushReplacement(
+                          PageRouteBuilder(
+                            transitionDuration: Duration.zero,
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    MasterScreen(
+                              child: ProfilScreen(),
+                              index: 0,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     } on Exception catch (e) {
                       // TODO
                       showDialog(

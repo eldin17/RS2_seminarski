@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/foundation.dart';
+import 'package:flutter_mobile/models/artikal.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile/models/login_response.dart';
@@ -49,6 +50,36 @@ class ZivotinjeProvider with ChangeNotifier {
 
       for (var item in data['data']) {
         result.data.add(Zivotinja.fromJson(item));
+      }
+
+      return result;
+    } else {
+      throw Exception("Greska!");
+    }
+  }
+
+  Future<List<Artikal>> getRecommendation(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/recommend";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      List<Artikal> result = [];
+
+      for (var item in data) {
+        result.add(Artikal.fromJson(item));
       }
 
       return result;

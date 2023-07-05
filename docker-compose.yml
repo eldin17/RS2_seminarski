@@ -9,7 +9,7 @@ services:
       - SA_PASSWORD=Chelsea321!
       - MSSQL_PID=Developer
     ports:
-      - 1416:1433
+      - 1417:1433
     expose:
       - 1433
     networks:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
     environment:
-      - ConnectionStrings:DefaultConnection=Server=ekucniljubimci-sql,1433;Database=eKucniLjubimci;User=sa;Password=Chelsea321!;ConnectRetryCount=0; TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=ekucniljubimci-sql,1433;Database=IB180121;User=sa;Password=Chelsea321!;ConnectRetryCount=0; TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 7152:7152

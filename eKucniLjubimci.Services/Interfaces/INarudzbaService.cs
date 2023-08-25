@@ -25,6 +25,7 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct);
         Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct);
         Task<DtoNarudzba> Payment(int narudzbaId);
+        Task<DtoNarudzba> StripeReference(int narudzbaId, AddReference reference);
 
         Task<List<string>> AllowedActions(int narudzbaId);
         Task<DtoNarudzba> GetTopLastMonth();

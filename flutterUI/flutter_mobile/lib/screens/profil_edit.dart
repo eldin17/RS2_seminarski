@@ -6,6 +6,7 @@ import 'package:flutter_mobile/models/kupac.dart';
 import 'package:flutter_mobile/providers/kupac_provider.dart';
 import 'package:flutter_mobile/providers/lokacija.dart';
 import 'package:flutter_mobile/providers/osoba_provider.dart';
+import 'package:flutter_mobile/screens/home.dart';
 import 'package:flutter_mobile/screens/profil_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +109,7 @@ class _ProfilEditState extends State<ProfilEdit> {
               children: [
                 Column(
                   children: [
-                    podaci(),
+                    podaci(widget.onEditFinished),
                   ],
                 )
               ],
@@ -119,7 +120,7 @@ class _ProfilEditState extends State<ProfilEdit> {
     );
   }
 
-  Row podaci() {
+  Row podaci(VoidCallback funkcijaRefresh) {
     return Row(
       children: [
         Column(
@@ -428,13 +429,13 @@ class _ProfilEditState extends State<ProfilEdit> {
                         //           ],
                         //         ));
 
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           PageRouteBuilder(
                             transitionDuration: Duration.zero,
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
-                              child: ProfilScreen(),
+                              child: HomeScreen(),
                               index: 0,
                             ),
                           ),
@@ -449,7 +450,9 @@ class _ProfilEditState extends State<ProfilEdit> {
                                 content: Text(e.toString()),
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                    },
                                     child: Text("Ok"),
                                   )
                                 ],

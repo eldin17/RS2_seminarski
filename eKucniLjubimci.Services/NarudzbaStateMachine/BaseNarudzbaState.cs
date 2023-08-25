@@ -85,7 +85,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             throw new Exception("Action Not Allowed :(");
         }
 
-        public virtual async Task<DtoNarudzba> Update(int narudzbaId,UpdateNarudzba request)
+        public virtual async Task<DtoNarudzba> Update(int narudzbaId, UpdateNarudzba request)
         {
             throw new Exception("Action Not Allowed :(");
         }
@@ -117,5 +117,10 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         {
             throw new Exception("Action Not Allowed :(");
         }
+        public virtual async Task<DtoNarudzba> StripeReference(int narudzbaId, AddReference reference)
+        {
+            throw new Exception("Action Not Allowed :(");
+        }
     }
 }
+

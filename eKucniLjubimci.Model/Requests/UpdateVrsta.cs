@@ -9,7 +9,7 @@ namespace eKucniLjubimci.Model.Requests
     public class UpdateVrsta
     {
         public string? Naziv { get; set; }
-        public string? Rasa { get; set; }
+        public int? RasaId { get; set; }
         public string? Opis { get; set; }
         public string? Boja { get; set; }
         public int? Starost { get; set; }

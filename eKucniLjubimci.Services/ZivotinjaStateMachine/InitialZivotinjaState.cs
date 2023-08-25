@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +38,9 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             var mappedEntity = _mapper.Map<rmqZivotinja>(obj);
             mappedEntity.Funkcija = "Add";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je dodana nova zivotinja \n-Id: {mappedEntity?.ZivotinjaId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoZivotinja>(obj);
         }

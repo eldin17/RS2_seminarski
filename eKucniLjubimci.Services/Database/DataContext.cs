@@ -30,6 +30,7 @@ namespace eKucniLjubimci.Services.Database
         public virtual DbSet<Uloga> Uloge { get; set; }
         public virtual DbSet<Vrsta> Vrste { get; set; }
         public virtual DbSet<Zivotinja> Zivotinje { get; set; }
+        public virtual DbSet<Rasa> Rase { get; set; }
 
     }
 }

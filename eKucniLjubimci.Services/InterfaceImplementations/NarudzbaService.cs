@@ -26,7 +26,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         public override IQueryable<Narudzba> AddInclude(IQueryable<Narudzba> data, SearchNarudzba? search)
         {
             data = data.Include(x => x.NarudzbeArtikli).ThenInclude(y=>y.Artikal).ThenInclude(z => z.Slike)
-                .Include(x => x.Zivotinje).ThenInclude(y=>y.Slike).Include(x=>x.Zivotinje).ThenInclude(x=>x.Vrsta).OrderByDescending(x=>x.DatumNarudzbe);
+                .Include(x => x.Zivotinje).ThenInclude(y=>y.Slike).Include(x=>x.Zivotinje).ThenInclude(x=>x.Vrsta).ThenInclude(x => x.Rasa).OrderByDescending(x=>x.DatumNarudzbe);
             return base.AddInclude(data, search);
         }
         public override async Task<DtoNarudzba> GetById(int id)
@@ -212,6 +212,13 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
             var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
             return await state.Payment(narudzbaId);
+        }
+
+        public async Task<DtoNarudzba> StripeReference(int narudzbaId, AddReference reference)
+        {
+            var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
+            var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
+            return await state.StripeReference(narudzbaId, reference);
         }
     }
 }

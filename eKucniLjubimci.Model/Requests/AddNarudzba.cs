@@ -15,5 +15,7 @@ namespace eKucniLjubimci.Model.Requests
 
         [Required(ErrorMessage = "Obavezno polje -KupacId-")]
         public int KupacId { get; set; }
+        public string PaymentId { get; set; } = "";
+        public string PaymentIntent { get; set; } = "";
     }
 }

@@ -10,7 +10,6 @@ namespace eKucniLjubimci.Services.Database
     {
         public int VrstaId { get; set; }
         public string Naziv { get; set; }
-        public string Rasa { get; set; }
         public string Opis { get; set; }
         public string Boja { get; set; }
         public int Starost { get; set; }
@@ -18,6 +17,10 @@ namespace eKucniLjubimci.Services.Database
         public bool isDeleted { get; set; } = false;
 
         public virtual List<Zivotinja> Zivotinje { get; set; }
+
+        public int RasaId { get; set; }
+        public virtual Rasa Rasa { get; set; }
+
 
     }
 }

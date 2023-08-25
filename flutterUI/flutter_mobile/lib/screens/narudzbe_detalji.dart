@@ -58,7 +58,24 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
                         ),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "PaymentId\n${widget.narudzba.paymentId}",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "PaymentIntent\n${widget.narudzba.paymentIntent}",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       ),
                       widget.narudzba.narudzbeArtikli != null
                           ? Align(

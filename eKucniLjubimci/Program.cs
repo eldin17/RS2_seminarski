@@ -25,6 +25,7 @@ builder.Services.AddTransient<IProdavacService, ProdavacService>();
 builder.Services.AddTransient<IVrstaService, VrstaService>();
 builder.Services.AddTransient<IZivotinjaService, ZivotinjaService>();
 builder.Services.AddTransient<IUlogaService, UlogaService>();
+builder.Services.AddTransient<IRasaService, RasaService>();
 
 builder.Services.AddTransient<BaseNarudzbaState>();
 builder.Services.AddTransient<InitialNarudzbaState>();
@@ -107,7 +108,7 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();   
+    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
 
     dataContext.Database.Migrate();
 }

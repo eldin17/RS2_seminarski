@@ -11,8 +11,8 @@ namespace eKucniLjubimci.Model.Requests
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Naziv-")]
         public string Naziv { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Rasa-")]
-        public string Rasa { get; set; }
+        [Required(ErrorMessage = "Obavezno polje -RasaId-")]
+        public int RasaId { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Opis-")]
         public string Opis { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Boja-")]

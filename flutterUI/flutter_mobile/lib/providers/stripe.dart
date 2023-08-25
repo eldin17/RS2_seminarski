@@ -1,16 +1,30 @@
 import 'dart:convert';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_mobile/models/artikal.dart';
+import 'package:flutter_mobile/models/narudzba.dart';
 import 'package:flutter_mobile/models/narudzba_artikal.dart';
+import 'package:flutter_mobile/models/narudzba_info.dart';
 import 'package:flutter_mobile/models/zivotinja.dart';
 import 'package:http/http.dart' as http;
 import 'package:stripe_checkout/stripe_checkout.dart';
 
-class StripeService {
+import '../models/login_response.dart';
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+class StripeService with ChangeNotifier {
   static String secretKey =
       "sk_test_51NKIziFfEoaxkl089RnSGEx4IuNXXr8hBDZlCj8xpJ0v7FuBMlOKsyYrSU4lNRBk2O7LGVPVVlnJFOQhrDRk6fT800DYvuiqU1";
   static String publishableKey = "";
+
+  static String _baseUrl = "http://10.0.2.2:7152/";
+  static String _endpoint = "api/Narudzba";
+
+  StripeService() {
+    _baseUrl = const String.fromEnvironment("baseUrl",
+        defaultValue: "http://10.0.2.2:7152/");
+  }
 
   static Future<dynamic> createCheckoutSession(
     List<NarudzbaArtikal> artikli,
@@ -60,6 +74,7 @@ class StripeService {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
     );
+
     return json.decode(response.body)["id"];
   }
 
@@ -76,12 +91,21 @@ class StripeService {
   }) async {
     final String sessionId =
         await createCheckoutSession(artikli, zivotinje, subTotal);
+
     final result = await redirectToCheckout(
         context: context,
         sessionId: sessionId,
         publishableKey: pkStripe,
         successUrl: "https://checkout.stripe.dev/success",
         canceledUrl: "https://checkout.stripe.dev/cancel");
+
+    final sessionData = await retrieveCheckoutSession(sessionId);
+
+    final paymentId = sessionData["id"];
+    final paymentIntent = sessionData["payment_intent"];
+    final referenceResponose = await stripeReference(NarudzbaInfo.narudzbaID!,
+        paymentId.toString(), paymentIntent.toString());
+
     if (mounted) {
       final text = result.when(
         redirected: () => 'Redirected Successfuly',
@@ -91,5 +115,64 @@ class StripeService {
       );
       return text;
     }
+  }
+
+  static Future<Map<String, dynamic>> retrieveCheckoutSession(
+    String sessionId,
+  ) async {
+    final uri =
+        Uri.parse("https://api.stripe.com/v1/checkout/sessions/$sessionId");
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $secretKey',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+    );
+
+    final sessionData = json.decode(response.body);
+    return sessionData;
+  }
+
+  static Future<Narudzba> stripeReference(
+      int id, String PaymentId, String PaymentIntent) async {
+    var url = "$_baseUrl$_endpoint/stripeReference/$id";
+
+    var headers = {
+      "Authorization": "Bearer ${LoginResponse.token}",
+      'accept': 'text/plain',
+      'Content-Type': 'application/json',
+    };
+    var uri = Uri.parse(url);
+    var body = jsonEncode({
+      "paymentId": PaymentId,
+      "paymentIntent": PaymentIntent,
+    });
+
+    var response = await http.put(
+      uri,
+      headers: headers,
+      body: body,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return Narudzba.fromJson(data);
+    } else {
+      throw Exception("Greska!");
+    }
+  }
+}
+
+bool isValidResponse(http.Response response) {
+  if (response.statusCode < 299) {
+    return true;
+  } else if (response.statusCode == 401) {
+    throw Exception("Unauthorized");
+  } else {
+    throw Exception(
+        "Greska. Molimo pokusajte ponovo. Code:${response.statusCode}");
   }
 }

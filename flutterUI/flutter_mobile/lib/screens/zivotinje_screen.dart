@@ -20,6 +20,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
   bool isLoading = true;
   bool isFilterVisible = false;
   TextEditingController _rasaController = new TextEditingController();
+  TextEditingController _rasa2Controller = new TextEditingController();
   TextEditingController _cijenaDoController = new TextEditingController();
   TextEditingController _cijenaOdController = new TextEditingController();
   @override
@@ -127,11 +128,27 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.pets),
-                      labelText: "Rasa (labrador, papagaj...)",
+                      labelText: "Vrsta (pas, macka...)",
                       hintStyle: TextStyle(
                           color: const Color.fromARGB(255, 207, 207, 207)),
                     ),
                     controller: _rasaController,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.pets),
+                      labelText: "Rasa (labrador, papagaj...)",
+                      hintStyle: TextStyle(
+                          color: const Color.fromARGB(255, 207, 207, 207)),
+                    ),
+                    controller: _rasa2Controller,
                   ),
                 ),
               ],
@@ -189,6 +206,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                     }
                     var data = await _zivotinjeProvider.get(filter: {
                       'rasa': _rasaController.text,
+                      'vrsta': _rasa2Controller.text,
                       'cijenaDo': cijenaDo,
                       'cijenaOd': cijenaOd,
                     });

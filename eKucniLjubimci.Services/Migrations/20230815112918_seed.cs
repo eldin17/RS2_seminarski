@@ -10,7 +10,6 @@ namespace eKucniLjubimci.Services.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
             migrationBuilder.InsertData(
                 table: "Kategorije",
                 columns: new[] { "KategorijaId", "Naziv", "isDeleted" },
@@ -211,20 +210,36 @@ namespace eKucniLjubimci.Services.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Vrste",
-                columns: new[] { "VrstaId", "Naziv", "Rasa", "Opis", "Boja", "Starost", "Prostor", "isDeleted" },
+                table: "Rase",
+                columns: new[] { "RasaId", "Naziv" },
                 values: new object[,]
                 {
-                    { 1, "Pas","Sarplaninac","Šarplaninac je pasmina pasa srednje veličine poznata po svojoj hrabrosti, zaštitničkom instinktu i izdržljivosti, te se često koristi kao čuvar stoke i imanja.","Bijela", 4, true,false },
-                    { 2, "Pas","Labrador","Labrador retriver je pasmina pasa poznata po svojoj privrženosti, inteligenciji i ljubaznom temperamentu, te se često koristi kao radni pas u različitim područjima, uključujući pretragu i spašavanje, terapiju i kao obiteljski ljubimac.","Zlatna",2, true, false },
-                    { 3, "Pas","Dalmatinac","Dalmatincu je karakteristična prepoznatljiva mrljasta dlaka, energična priroda i prijateljski temperament, te je često povezan s vatrogasnim postrojbama i poznat po svom elegantnom izgledu.","Bijela-Crna",7, true, false },
-                    { 4, "Macka","Perzijska","Perzijska mačka je prepoznatljiva po svojoj dugoj, bujnoj dlaci, velikim očima i elegantnom izgledu, a poznata je po svojoj mirnoj i umiljatoj naravi.","Bijela", 1,false ,false },
-                    { 5, "Macka","Abesinska","Abesinska mačka je eleganta i graciozna pasmina, s kratkom smeđom dlakom koja se ističe po svom tigrastom uzorku, a karakterizira je energičnost, znatiželja i ljubav prema igri.","Zlatna", 2, false, false },
-                    { 6, "Macka","Egipatska","Egipatska mau je drevna pasmina mačaka poznata po svojim karakterističnim mrljama sličnim leopardovima, iznimno je elegantna i brza, te se ističe po svojoj ljupkoj i privrženoj naravi.","Siva", 3, false, false },
-                    { 7, "Ptica","Papagaj","Papagaj je šareno pernato stvorenje s izražajnim kljunom, sposoban za ponavljanje riječi i zvukova, te je popularan kao kućni ljubimac zbog svoje inteligencije i druželjubivosti.","Plava", 1,  false,false },
-                    { 8, "Ptica","Kanarinac","Kanarinac je mali pjevajući ptičji ljubimac s prepoznatljivim živopisnim perjem i slatkim pjevom, često se uzgaja zbog svoje ljepote i melodičnog glasa.","Zuta", 2, false, false },
-                    { 9, "Ptica","Golub","Golub je ptica srednje veličine, poznata po svojoj sposobnosti letenja, vjernosti i izraženom društvenom ponašanju, često se koristi za golubarstvo i kao simbol mira.","Siva", 1,false , false },
-                });            
+                    {1, "Pas"},
+                    {2, "Macka"},
+                    {3, "Ptica"},
+                    {4, "Riba"},
+                    {5, "Hrcak"},
+                    {6, "Kornjaca"},
+                    {7, "Zec"},
+                    {8, "Zmija"},
+                    {9, "Zamorac"},
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vrste",
+                columns: new[] { "VrstaId", "RasaId", "Naziv", "Opis", "Boja", "Starost", "Prostor", "isDeleted" },
+                values: new object[,]
+                {
+                    { 1, 1,"Sarplaninac","Šarplaninac je pasmina pasa srednje veličine poznata po svojoj hrabrosti, zaštitničkom instinktu i izdržljivosti, te se često koristi kao čuvar stoke i imanja.","Bijela", 4, true,false },
+                    { 2, 1,"Labrador","Labrador retriver je pasmina pasa poznata po svojoj privrženosti, inteligenciji i ljubaznom temperamentu, te se često koristi kao radni pas u različitim područjima, uključujući pretragu i spašavanje, terapiju i kao obiteljski ljubimac.","Zlatna",2, true, false },
+                    { 3, 1,"Dalmatinac","Dalmatincu je karakteristična prepoznatljiva mrljasta dlaka, energična priroda i prijateljski temperament, te je često povezan s vatrogasnim postrojbama i poznat po svom elegantnom izgledu.","Bijela-Crna",7, true, false },
+                    { 4, 2,"Perzijska","Perzijska mačka je prepoznatljiva po svojoj dugoj, bujnoj dlaci, velikim očima i elegantnom izgledu, a poznata je po svojoj mirnoj i umiljatoj naravi.","Bijela", 1,false ,false },
+                    { 5, 2,"Abesinska","Abesinska mačka je eleganta i graciozna pasmina, s kratkom smeđom dlakom koja se ističe po svom tigrastom uzorku, a karakterizira je energičnost, znatiželja i ljubav prema igri.","Zlatna", 2, false, false },
+                    { 6, 2,"Egipatska","Egipatska mau je drevna pasmina mačaka poznata po svojim karakterističnim mrljama sličnim leopardovima, iznimno je elegantna i brza, te se ističe po svojoj ljupkoj i privrženoj naravi.","Siva", 3, false, false },
+                    { 7, 3,"Papagaj","Papagaj je šareno pernato stvorenje s izražajnim kljunom, sposoban za ponavljanje riječi i zvukova, te je popularan kao kućni ljubimac zbog svoje inteligencije i druželjubivosti.","Plava", 1,  false,false },
+                    { 8, 3,"Kanarinac","Kanarinac je mali pjevajući ptičji ljubimac s prepoznatljivim živopisnim perjem i slatkim pjevom, često se uzgaja zbog svoje ljepote i melodičnog glasa.","Zuta", 2, false, false },
+                    { 9, 3,"Golub","Golub je ptica srednje veličine, poznata po svojoj sposobnosti letenja, vjernosti i izraženom društvenom ponašanju, često se koristi za golubarstvo i kao simbol mira.","Siva", 1,false , false },
+                });
 
             migrationBuilder.InsertData(
                 table: "Kupci",
@@ -232,8 +247,8 @@ namespace eKucniLjubimci.Services.Migrations
                 values: new object[,]
                 {
                     { 1, 3, true,true,false,1,1,"http://localhost:7152/SlikeKupaca/slika1.jpg",3,false },
-                    { 2, 2, false,false,true,2,2,"http://localhost:7152/SlikeKupaca/slika2.jpg",4,false },
-                    { 3, 10, false,true,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
+                    { 2, 2, false,true,true,2,2,"http://localhost:7152/SlikeKupaca/slika2.jpg",4,false },
+                    { 3, 10, false,false,true,3,3,"http://localhost:7152/SlikeKupaca/slika3.jpg",6,false },
                 });
 
             migrationBuilder.InsertData(
@@ -273,24 +288,24 @@ namespace eKucniLjubimci.Services.Migrations
 
             migrationBuilder.InsertData(
                table: "Narudzbe",
-               columns: new[] { "NarudzbaId", "DatumNarudzbe", "TotalFinal", "StateMachine", "KupacId" },
+               columns: new[] { "NarudzbaId", "DatumNarudzbe", "TotalFinal", "StateMachine", "KupacId", "PaymentId", "PaymentIntent" },
                values: new object[,]
                {
-                    {1, DateTime.UtcNow.AddDays(-12),200m,"Done",1},
-                    {2, DateTime.UtcNow.AddDays(-17),10m,"Done",1},
-                    {3, DateTime.UtcNow.AddDays(-19), 250m, "Done", 1},
-                    {4, DateTime.UtcNow.AddDays(-20), 300m, "Done", 2},
-                    {5, DateTime.UtcNow.AddDays(-7), 25m, "Done", 2},
-                    {6, DateTime.UtcNow.AddDays(-4), 10m, "Done", 3},
-                    {7, DateTime.UtcNow.AddDays(-1).AddMonths(-1),510m,"Draft",3},
-                    {8, DateTime.UtcNow.AddDays(-28).AddMonths(-1),560m,"Done",3},
-                    {9, DateTime.UtcNow.AddDays(-25).AddMonths(-1), 510m, "Done", 3},
-                    {10, DateTime.UtcNow.AddDays(-21).AddMonths(-1), 510m, "Draft", 3},
-                    {11, DateTime.UtcNow.AddDays(-5).AddMonths(-1), 560m, "Done", 3},
-                    {12, DateTime.UtcNow.AddDays(-9).AddMonths(-1), 510m, "Done", 3},
-                    {13, DateTime.UtcNow.AddDays(-18).AddMonths(-1), 210m, "Draft", 3},
-                    {14, DateTime.UtcNow.AddDays(-12).AddMonths(-1), 210m, "Done", 3},
-                    {15, DateTime.UtcNow.AddDays(-10).AddMonths(-1), 210m, "Draft", 3},
+                    {1, DateTime.UtcNow.AddDays(-12),200m,"Done",1,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {2, DateTime.UtcNow.AddDays(-17),10m,"Done",1,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {3, DateTime.UtcNow.AddDays(-19), 250m, "Done", 1, "FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ", "FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {4, DateTime.UtcNow.AddDays(-20), 300m, "Done", 2,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {5, DateTime.UtcNow.AddDays(-7), 25m, "Done", 2, "FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ", "FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {6, DateTime.UtcNow.AddDays(-4), 10m, "Done", 3, "FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ", "FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {7, DateTime.UtcNow.AddDays(-1).AddMonths(-1),510m,"Draft",3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {8, DateTime.UtcNow.AddDays(-28).AddMonths(-1),560m,"Done",3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {9, DateTime.UtcNow.AddDays(-25).AddMonths(-1), 510m, "Done", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    {10, DateTime.UtcNow.AddDays(-21).AddMonths(-1), 510m, "Draft", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    { 11, DateTime.UtcNow.AddDays(-5).AddMonths(-1), 560m, "Done", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    { 12, DateTime.UtcNow.AddDays(-9).AddMonths(-1), 510m, "Done", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    { 13, DateTime.UtcNow.AddDays(-18).AddMonths(-1), 210m, "Draft", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    { 14, DateTime.UtcNow.AddDays(-12).AddMonths(-1), 210m, "Done", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
+                    { 15, DateTime.UtcNow.AddDays(-10).AddMonths(-1), 210m, "Draft", 3,"FAKE_SEED_cs_test_b11Gj9AcTD5FrTzoZFwu6MBy4USeka8s5dGY6K3KDXUKqOdWU0qkEFDovQ","FAKE_SEED_pi_3NfHcmFfEoaxkl080gC8RK19"},
                });
 
             migrationBuilder.InsertData(
@@ -312,35 +327,35 @@ namespace eKucniLjubimci.Services.Migrations
                     { 10, 8, 2 },
                     { 11, 8, 10 },
                     { 12, 8, 17 },
-                    
+
                     { 13, 9, 3 },
                     { 14, 9, 10 },
                     { 15, 9, 17 },
-                    
+
                     { 16, 10, 6 },
                     { 17, 10, 12 },
                     { 18, 10, 19 },
-                    
+
                     { 19, 11, 5 },
                     { 20, 11, 12 },
                     { 21, 11, 19 },
-                    
+
                     { 22, 12, 6 },
                     { 23, 12, 12 },
                     { 24, 12, 19 },
-                    
+
                     { 25, 13, 14 },
                     { 26, 13, 8 },
                     { 27, 13, 21 },
-                    
+
                     { 28, 14, 14 },
                     { 29, 14, 8  },
                     { 30, 14, 21 },
-                    
+
                     { 31, 15, 14 },
                     { 32, 15, 8  },
                     { 33, 15, 21 },
-                    
+
                });
 
             migrationBuilder.InsertData(

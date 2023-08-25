@@ -7,6 +7,7 @@ import 'package:flutter_desktop/providers/narudzbe_provider.dart';
 import 'package:flutter_desktop/providers/novosti_provider.dart';
 import 'package:flutter_desktop/providers/osoba_provider.dart';
 import 'package:flutter_desktop/providers/prodavac_provider.dart';
+import 'package:flutter_desktop/providers/rase_provider.dart';
 import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
 import 'package:flutter_desktop/screens/home_screen.dart';
@@ -30,6 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProdavacProvider()),
         ChangeNotifierProvider(create: (_) => KategorijeProvider()),
         ChangeNotifierProvider(create: (_) => NarudzbeProvider()),
+        ChangeNotifierProvider(create: (_) => RaseProvider()),
       ],
       child: const MyMaterialApp(),
     ),

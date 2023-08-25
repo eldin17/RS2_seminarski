@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../models/artikal.dart';
 import '../models/kupac.dart';
 import '../models/narudzba_info.dart';
+import '../models/rasa.dart';
 import '../models/vrsta.dart';
 import '../models/zivotinja.dart';
 import '../providers/narudzbe_provider.dart';
@@ -185,11 +186,11 @@ Column podaci(
                 child: Container(
                   child: zivotinja.vrsta != null
                       ? Text(
-                          "Vrsta - ${zivotinja.vrsta?.naziv}\nRasa - ${zivotinja.vrsta?.rasa}\nStarost - ${zivotinja.vrsta?.starost} godine",
+                          "Vrsta - ${zivotinja.vrsta?.rasa?.naziv}\nRasa - ${zivotinja.vrsta?.naziv}\nStarost - ${zivotinja.vrsta?.starost} godine",
                           style: TextStyle(fontSize: 17),
                         )
                       : Text(
-                          "Vrsta - ${vrsta?.naziv}\nRasa - ${vrsta?.rasa}\nStarost - ${vrsta?.starost} godine",
+                          "Vrsta - ${vrsta?.rasa?.naziv}\nRasa - ${vrsta?.naziv}\nStarost - ${vrsta?.starost} godine",
                           style: TextStyle(fontSize: 17),
                         ),
                 ),
@@ -275,7 +276,7 @@ Column podaci(
               height: 0,
             ),
       (kupac.dvoriste == false && kupac.kuca == false) &&
-              zivotinja.vrsta?.prostor == true
+              (zivotinja.vrsta?.prostor == true || vrsta?.prostor == true)
           ? Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

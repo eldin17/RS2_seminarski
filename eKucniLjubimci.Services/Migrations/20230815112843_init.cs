@@ -58,6 +58,19 @@ namespace eKucniLjubimci.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rase",
+                columns: table => new
+                {
+                    RasaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rase", x => x.RasaId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Uloge",
                 columns: table => new
                 {
@@ -68,25 +81,6 @@ namespace eKucniLjubimci.Services.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Uloge", x => x.UlogaId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Vrste",
-                columns: table => new
-                {
-                    VrstaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rasa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Boja = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Starost = table.Column<int>(type: "int", nullable: false),
-                    Prostor = table.Column<bool>(type: "bit", nullable: false),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vrste", x => x.VrstaId);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,6 +104,31 @@ namespace eKucniLjubimci.Services.Migrations
                         column: x => x.KategorijaId,
                         principalTable: "Kategorije",
                         principalColumn: "KategorijaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vrste",
+                columns: table => new
+                {
+                    VrstaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Boja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Starost = table.Column<int>(type: "int", nullable: false),
+                    Prostor = table.Column<bool>(type: "bit", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    RasaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vrste", x => x.VrstaId);
+                    table.ForeignKey(
+                        name: "FK_Vrste_Rase_RasaId",
+                        column: x => x.RasaId,
+                        principalTable: "Rase",
+                        principalColumn: "RasaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -214,7 +233,9 @@ namespace eKucniLjubimci.Services.Migrations
                     DatumNarudzbe = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KupacId = table.Column<int>(type: "int", nullable: false)
+                    KupacId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaymentIntent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -404,6 +425,11 @@ namespace eKucniLjubimci.Services.Migrations
                 column: "ZivotinjaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Vrste_RasaId",
+                table: "Vrste",
+                column: "RasaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Zivotinje_NarudzbaId",
                 table: "Zivotinje",
                 column: "NarudzbaId");
@@ -446,6 +472,9 @@ namespace eKucniLjubimci.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "Kupci");
+
+            migrationBuilder.DropTable(
+                name: "Rase");
 
             migrationBuilder.DropTable(
                 name: "KorisnickiNalozi");

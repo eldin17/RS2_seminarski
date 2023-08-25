@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Helpers;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
@@ -101,10 +100,10 @@ namespace eKucniLjubimci.Controllers
             var mappedEntity = _mapper.Map<rmqArtikal>(artikal);
             mappedEntity.Funkcija = "AddSlike";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            //using var bus = RabbitHutch.CreateBus("rabbitmq");
+            ////using var bus = RabbitHutch.CreateBus("host=localhost");
 
-            bus.PubSub.Publish(mappedEntity);
+            //bus.PubSub.Publish(mappedEntity);
 
 
 

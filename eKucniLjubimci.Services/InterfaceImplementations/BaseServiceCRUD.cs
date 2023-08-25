@@ -24,7 +24,15 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             _context.Set<TDb>().Add(obj);            
 
             await _context.SaveChangesAsync();
+
+            SendMail();
+
             return _mapper.Map<T>(obj);
+        }
+
+        public virtual void SendMail()
+        {
+            return;
         }
 
         public virtual async Task<T> Update(int id, TUpdate updateRequest)

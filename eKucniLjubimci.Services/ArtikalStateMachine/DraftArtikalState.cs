@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +38,9 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
             var mappedEntity = _mapper.Map<rmqArtikal>(dbObj);
             mappedEntity.Funkcija = "Update";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je azuriran artikal \n-Id: {mappedEntity?.ArtikalId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoArtikal>(dbObj);
         }
@@ -57,10 +56,9 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
             var mappedEntity = _mapper.Map<rmqArtikal>(dbObj);
             mappedEntity.Funkcija = "Activate";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je aktiviran artikal \n-Id: {mappedEntity?.ArtikalId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoArtikal>(dbObj);
         }
@@ -76,10 +74,9 @@ namespace eKucniLjubimci.Services.ArtikalStateMachine
             var mappedEntity = _mapper.Map<rmqArtikal>(dbObj);
             mappedEntity.Funkcija = "Delete";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je izbrisan artikal \n-Id: {mappedEntity?.ArtikalId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoArtikal>(dbObj);
         }

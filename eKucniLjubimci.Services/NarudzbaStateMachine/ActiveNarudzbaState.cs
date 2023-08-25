@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using EasyNetQ;
+
 using eKucniLjubimci.Model.DataTransferObjects;
+using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Stripe;
@@ -11,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace eKucniLjubimci.Services.NarudzbaStateMachine
 {
@@ -43,12 +47,11 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             await _context.SaveChangesAsync();
 
             var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
-            mappedEntity.Funkcija = "Cancel";
+            mappedEntity.Funkcija = "Cancel";            
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je otkazana narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
@@ -81,10 +84,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
             mappedEntity.Funkcija = "StripePayment";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je placena narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return new StripePayment(
               createdPayment.CustomerId,
@@ -94,7 +96,8 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
               createdPayment.Amount,
               createdPayment.Id);
         }
-
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------
         public override async Task<DtoNarudzba> Payment(int narudzbaId)
         {
             var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x => x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
@@ -114,13 +117,27 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
             mappedEntity.Funkcija = "StripePayment";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je placena narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(narudzba);
         }
+
+        public override async Task<DtoNarudzba> StripeReference(int narudzbaId,AddReference reference)
+        {
+            var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x => x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
+
+            narudzba.PaymentId= reference.PaymentId;
+            narudzba.PaymentIntent= reference.PaymentIntent;
+            
+            await _context.SaveChangesAsync();           
+
+            return _mapper.Map<DtoNarudzba>(narudzba);
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------
         public override async Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct)
         {
             CustomerCreateOptions customerOptions = new CustomerCreateOptions
@@ -146,10 +163,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
             mappedEntity.Funkcija = "Delete";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je izbrisana narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(dbObj);
         }

@@ -26,7 +26,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
         public override IQueryable<Artikal> AddInclude(IQueryable<Artikal> data, SearchArtikal? search)
         {
-            data = data.Include(x => x.Kategorija).Include(x => x.Slike);
+            data = data.Include(x => x.Kategorija).Include(x => x.Slike).OrderByDescending(x=>x.ArtikalId);
             return base.AddInclude(data, search);
         }
         public override async Task<DtoArtikal> GetById(int id)

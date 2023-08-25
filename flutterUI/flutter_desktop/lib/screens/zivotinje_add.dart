@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_desktop/models/rasa.dart';
 import 'package:flutter_desktop/models/zivotinja.dart';
 import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
+import '../models/search_result.dart';
 import '../models/vrsta.dart';
+import '../providers/rase_provider.dart';
 import '../util/util.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -34,9 +37,13 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
 
   late ZivotinjeProvider _zivotinjeProvider;
   late VrsteProvider _vrstaProvider;
+  late RaseProvider _raseProvider;
 
   Map<String, dynamic> _initialValueVrsta = {};
   Map<String, dynamic> _initialValueZivotinja = {};
+
+  SearchResult<Rasa>? raseData;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -45,7 +52,7 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
 
     _initialValueVrsta = {
       'naziv': vrsta.naziv,
-      'rasa': vrsta.rasa,
+      'rasaId': vrsta.rasaId,
       'opis': vrsta.opis,
       'boja': vrsta.boja,
       'starost': int.tryParse(vrsta.starost.toString()),
@@ -61,6 +68,17 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
 
     _zivotinjeProvider = context.read<ZivotinjeProvider>();
     _vrstaProvider = context.read<VrsteProvider>();
+    _raseProvider = context.read<RaseProvider>();
+
+    initForm();
+  }
+
+  Future initForm() async {
+    raseData = await _raseProvider.get();
+    print(raseData);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -78,7 +96,7 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
           children: [
             Column(
               children: [
-                _buildForm1(),
+                isLoading ? Container() : _buildForm1(),
                 SizedBox(
                   height: 20,
                 ),
@@ -117,6 +135,13 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                                     true) {
                               print(_formKeyVrsta.currentState?.value);
                               print(_formKeyZivotinja.currentState?.value);
+
+                              // int id = int.parse(_formKeyVrsta
+                              //     .currentState!.fields['rasaId']?.value);
+                              // var vrsta = Vrsta.fromJson(
+                              //     _formKeyVrsta.currentState!.value);
+                              // vrsta.rasaId = id;
+
                               var response = await _vrstaProvider.add(
                                   Vrsta.fromJson(
                                       _formKeyVrsta.currentState!.value));
@@ -259,6 +284,7 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                   Container(
                     width: 500,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                           child: FormBuilderTextField(
@@ -273,17 +299,48 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                           ),
                         ),
                         Expanded(
-                          child: FormBuilderTextField(
-                            name: 'rasa',
-                            decoration: InputDecoration(labelText: "Rasa"),
+                          child: FormBuilderDropdown<int>(
+                            name: 'rasaId',
+                            decoration: InputDecoration(
+                              labelText: 'Vrsta',
+                              suffix: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _formKeyVrsta.currentState!.fields['rasaId']
+                                      ?.reset();
+                                },
+                              ),
+                              hintText: 'Vrsta',
+                            ),
+                            items: raseData?.data
+                                    .map((item) => DropdownMenuItem(
+                                          alignment:
+                                              AlignmentDirectional.center,
+                                          value: item.rasaId,
+                                          child: Text(item.naziv ?? ""),
+                                        ))
+                                    .toList() ??
+                                [],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Rasa je obavezna';
+                              if (value == null || value == 0) {
+                                return 'Vrsta je obavezna';
                               }
                               return null;
                             },
                           ),
                         ),
+                        // Expanded(
+                        //   child: FormBuilderTextField(
+                        //     name: 'rasa',
+                        //     decoration: InputDecoration(labelText: "Rasa"),
+                        //     validator: (value) {
+                        //       if (value == null || value.isEmpty) {
+                        //         return 'Rasa je obavezna';
+                        //       }
+                        //       return null;
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -318,6 +375,10 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                               final parsedValue = int.tryParse(value);
                               if (parsedValue == null) {
                                 return 'Starost mora biti broj';
+                              }
+                              if (value != null &&
+                                  (parsedValue > 100 || parsedValue < 1)) {
+                                return 'Raspon 1-100';
                               }
                               return null;
                             },

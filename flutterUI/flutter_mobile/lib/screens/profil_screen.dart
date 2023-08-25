@@ -20,6 +20,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   Kupac kupac = Kupac();
   late KupacProvider _kupciProvider;
   bool isLoading = true;
+  var slika = "";
 
   @override
   void initState() {
@@ -28,11 +29,21 @@ class _ProfilScreenState extends State<ProfilScreen> {
     initForm();
   }
 
+  void refreshProfil() async {
+    var novi = await _kupciProvider
+        .getByKorisnickiId(LoginResponse.idLogiranogKorisnika!);
+    setState(() {
+      kupac = novi;
+      slika = kupac.slikaKupca!;
+    });
+  }
+
   Future initForm() async {
     Kupac novi = await _kupciProvider
         .getByKorisnickiId(LoginResponse.idLogiranogKorisnika!);
     setState(() {
       kupac = novi;
+      slika = kupac.slikaKupca!;
       isLoading = false;
     });
   }
@@ -48,7 +59,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      slika(kupac),
+                      slikaKupca(kupac),
                       SizedBox(
                         height: 30,
                       ),
@@ -71,7 +82,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                     lokacijaid: data.lokacijaId!,
                                     osobaid: data.osobaId!,
                                     kupac: data,
-                                    onEditFinished: initForm,
+                                    onEditFinished: refreshProfil,
                                   ),
                                   index: 0,
                                 ),
@@ -88,7 +99,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 }
 
-Container slika(Kupac kupac) {
+Container slikaKupca(Kupac kupac) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
@@ -133,7 +144,7 @@ Column podaci(Kupac kupac) {
               Container(
                 width: 380,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       "${kupac.osoba?.ime}",
@@ -173,7 +184,7 @@ Column podaci(Kupac kupac) {
               Container(
                 width: 380,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       "${kupac.lokacija?.drzava}",

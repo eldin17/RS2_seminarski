@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,10 +54,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
                 mappedEntity.Funkcija = "AddArtikal";
 
-                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-                //using var bus = RabbitHutch.CreateBus("host=localhost");
+                string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je dodat artikal na narudzbu \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-                bus.PubSub.Publish(mappedEntity);
+                rmqMail.RabbitMQSend(message);
 
                 var obj = _mapper.Map<DtoNarudzba>(narudzba);
                 return obj;
@@ -82,10 +81,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
                 mappedEntity.Funkcija = "RemoveArtikal";
 
-                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-                //using var bus = RabbitHutch.CreateBus("host=localhost");
+                string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je uklonjen artikal sa narudzbe \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-                bus.PubSub.Publish(mappedEntity);
+                rmqMail.RabbitMQSend(message);
 
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
@@ -108,10 +106,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
                 mappedEntity.Funkcija = "AddZivotinja";
 
-                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-                //using var bus = RabbitHutch.CreateBus("host=localhost");
+                string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je dodana zivotinja na narudzbu \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-                bus.PubSub.Publish(mappedEntity);
+                rmqMail.RabbitMQSend(message);
 
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
@@ -134,10 +131,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
                 var mappedEntity = _mapper.Map<rmqNarudzba>(narudzba);
                 mappedEntity.Funkcija = "RemoveZivotinja";
 
-                using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-                //using var bus = RabbitHutch.CreateBus("host=localhost");
+                string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je uklonjena zivotinja na narudzbu \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-                bus.PubSub.Publish(mappedEntity);
+                rmqMail.RabbitMQSend(message);
 
                 return _mapper.Map<DtoNarudzba>(narudzba);
             }
@@ -155,10 +151,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
             mappedEntity.Funkcija = "Update";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je azurirana narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
@@ -174,10 +169,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
             mappedEntity.Funkcija = "Activate";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je aktivirana nova narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(dbObj);
         }
@@ -198,10 +192,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(dbObj);
             mappedEntity.Funkcija = "Delete";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je izbrisana narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(dbObj);
         }

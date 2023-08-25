@@ -12,7 +12,7 @@ using eKucniLjubimci.Services.Database;
 namespace eKucniLjubimci.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230621185646_init")]
+    [Migration("20230815112843_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -126,7 +126,7 @@ namespace eKucniLjubimci.Services.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KupacId"));
 
                     b.Property<int>("BrojNarudzbi")
-                        .HasColumnType("int");                    
+                        .HasColumnType("int");
 
                     b.Property<bool>("Dvoriste")
                         .HasColumnType("bit");
@@ -207,6 +207,14 @@ namespace eKucniLjubimci.Services.Migrations
 
                     b.Property<int>("KupacId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentIntent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StateMachine")
                         .IsRequired()
@@ -340,6 +348,23 @@ namespace eKucniLjubimci.Services.Migrations
                     b.ToTable("Prodavci");
                 });
 
+            modelBuilder.Entity("eKucniLjubimci.Services.Database.Rasa", b =>
+                {
+                    b.Property<int>("RasaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RasaId"));
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RasaId");
+
+                    b.ToTable("Rase");
+                });
+
             modelBuilder.Entity("eKucniLjubimci.Services.Database.Slika", b =>
                 {
                     b.Property<int>("SlikaId")
@@ -414,9 +439,8 @@ namespace eKucniLjubimci.Services.Migrations
                     b.Property<bool>("Prostor")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Rasa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RasaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Starost")
                         .HasColumnType("int");
@@ -425,6 +449,8 @@ namespace eKucniLjubimci.Services.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("VrstaId");
+
+                    b.HasIndex("RasaId");
 
                     b.ToTable("Vrste");
                 });
@@ -597,6 +623,17 @@ namespace eKucniLjubimci.Services.Migrations
                     b.Navigation("Zivotinja");
                 });
 
+            modelBuilder.Entity("eKucniLjubimci.Services.Database.Vrsta", b =>
+                {
+                    b.HasOne("eKucniLjubimci.Services.Database.Rasa", "Rasa")
+                        .WithMany("Vrste")
+                        .HasForeignKey("RasaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rasa");
+                });
+
             modelBuilder.Entity("eKucniLjubimci.Services.Database.Zivotinja", b =>
                 {
                     b.HasOne("eKucniLjubimci.Services.Database.Narudzba", "Narudzba")
@@ -660,6 +697,11 @@ namespace eKucniLjubimci.Services.Migrations
             modelBuilder.Entity("eKucniLjubimci.Services.Database.Prodavac", b =>
                 {
                     b.Navigation("Novosti");
+                });
+
+            modelBuilder.Entity("eKucniLjubimci.Services.Database.Rasa", b =>
+                {
+                    b.Navigation("Vrste");
                 });
 
             modelBuilder.Entity("eKucniLjubimci.Services.Database.Uloga", b =>

@@ -1,3 +1,4 @@
+import 'package:flutter_mobile/models/rasa.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'vrsta.g.dart';
@@ -6,7 +7,8 @@ part 'vrsta.g.dart';
 class Vrsta {
   int? vrstaId;
   String? naziv;
-  String? rasa;
+  int? rasaId;
+  Rasa? rasa;
   String? opis;
   String? boja;
   int? starost;
@@ -15,6 +17,7 @@ class Vrsta {
   Vrsta({
     this.vrstaId,
     this.naziv,
+    this.rasaId,
     this.rasa,
     this.opis,
     this.boja,

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.ArtikalStateMachine.RabbitMQType;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.NarudzbaStateMachine.RabbitMQType;
+using Microsoft.Extensions.Configuration;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -39,10 +39,9 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             var mappedEntity = _mapper.Map<rmqNarudzba>(obj);
             mappedEntity.Funkcija = "Add";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je dodana nova narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoNarudzba>(obj);
         }

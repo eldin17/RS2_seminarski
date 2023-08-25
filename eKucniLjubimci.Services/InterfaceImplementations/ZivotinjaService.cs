@@ -31,22 +31,22 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         }
         public override IQueryable<Zivotinja> AddInclude(IQueryable<Zivotinja> data, SearchZivotinja? search)
         {
-            data = data.Include(x => x.Vrsta).Include(x => x.Slike);
+            data = data.Include(x => x.Vrsta).ThenInclude(x=>x.Rasa).Include(x => x.Slike).OrderByDescending(x=>x.DatumPostavljanja);
 
             return base.AddInclude(data, search);
         }
         public override async Task<DtoZivotinja> GetById(int id)
         {
-            var data = await _context.Set<Zivotinja>().Include(x=>x.Vrsta).Include(x=>x.Slike).FirstOrDefaultAsync(x=>x.ZivotinjaId==id);
+            var data = await _context.Set<Zivotinja>().Include(x=>x.Vrsta).ThenInclude(x => x.Rasa).Include(x=>x.Slike).FirstOrDefaultAsync(x=>x.ZivotinjaId==id);
 
             return _mapper.Map<DtoZivotinja>(data);
         }
         public override IQueryable<Zivotinja> AddFilter(IQueryable<Zivotinja> data, SearchZivotinja? search)
         {
-            data = data.Where(x => x.StateMachine != "Deleted").Where(x=>x.Slike.Count>0).OrderByDescending(x=>x.Naziv);
+            data = data.Where(x => x.StateMachine != "Deleted").Where(x=>x.Slike.Count>0);
             if (!string.IsNullOrWhiteSpace(search.Rasa))
             {
-                data = data.Where(x => x.Vrsta.Rasa.Contains(search.Rasa));
+                data = data.Where(x => x.Vrsta.Rasa.Naziv.ToLower().Contains(search.Rasa.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search.Vrsta))
             {
@@ -129,6 +129,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
                 var dataDB = _context.Narudzbe
                     .Include(x => x.Zivotinje).ThenInclude(x => x.Slike)
+                    .Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta)
                     .Include(x => x.NarudzbeArtikli).ThenInclude(x => x.Artikal).ThenInclude(x => x.Slike).ToList();
 
                 var data = new List<ProductEntry>();
@@ -143,7 +144,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
                             {
                                 data.Add(new ProductEntry()
                                 {
-                                    ProductID = (uint)zivotinja.ZivotinjaId,
+                                    ProductID = (uint)zivotinja.Vrsta.RasaId,
                                     CoPurchaseProductID = (uint)artikal.ArtikalId,
                                 });
                             }
@@ -177,13 +178,16 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
             var rezultat = new List<Tuple<Artikal, float>>();
 
+            var zivotinjaFromId = _context.Zivotinje.Include(x=>x.Vrsta).FirstOrDefault(x => x.ZivotinjaId ==id);
+
+
             foreach (var artikal in sviArtikli)
             {
                 var predictionengine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
                 var prediction = predictionengine.Predict(
                                          new ProductEntry()
                                          {
-                                             ProductID = (uint)id,
+                                             ProductID = (uint)zivotinjaFromId.Vrsta.RasaId,
                                              CoPurchaseProductID = (uint)artikal.ArtikalId
                                          });
 

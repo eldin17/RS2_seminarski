@@ -4,6 +4,7 @@ using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Model.SearchObjects;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,13 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             return _mapper.Map<DtoVrsta>(dbObj);
         }
 
+        public override IQueryable<Vrsta> AddInclude(IQueryable<Vrsta> data, SearchVrsta? search)
+        {
+            data = data.Include(x => x.Rasa);
+
+            return base.AddInclude(data, search);
+        }
+
         public override IQueryable<Vrsta> AddFilter(IQueryable<Vrsta> data, SearchVrsta? search)
         {
             data = data.Where(x => x.isDeleted == false);
@@ -37,7 +45,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             }
             if (!string.IsNullOrWhiteSpace(search.Rasa))
             {
-                data = data.Where(x => x.Rasa.Contains(search.Rasa));
+                data = data.Where(x => x.Rasa.Naziv.ToLower().Contains(search.Rasa.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search.Boja))
             {

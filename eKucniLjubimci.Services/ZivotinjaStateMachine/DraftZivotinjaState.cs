@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using EasyNetQ;
 using eKucniLjubimci.Model.DataTransferObjects;
 using eKucniLjubimci.Model.Requests;
 using eKucniLjubimci.Services.Database;
 using eKucniLjubimci.Services.ZivotinjaStateMachine.RabbitMQType;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
 {
     public class DraftZivotinjaState : BaseZivotinjaState
     {
+
         public DraftZivotinjaState(DataContext context, IMapper mapper, IServiceProvider serviceProvider) : base(context, mapper, serviceProvider)
         {
         }
@@ -40,10 +41,9 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             var mappedEntity = _mapper.Map<rmqZivotinja>(dbObj);
             mappedEntity.Funkcija = "Update";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je azurirana zivotinja \n-Id: {mappedEntity?.ZivotinjaId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoZivotinja>(dbObj);
         }
@@ -59,10 +59,9 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             var mappedEntity = _mapper.Map<rmqZivotinja>(dbObj);
             mappedEntity.Funkcija = "Activate";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je aktivirana zivotinja \n-Id: {mappedEntity?.ZivotinjaId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoZivotinja>(dbObj);
         }
@@ -78,10 +77,9 @@ namespace eKucniLjubimci.Services.ZivotinjaStateMachine
             var mappedEntity = _mapper.Map<rmqZivotinja>(dbObj);
             mappedEntity.Funkcija = "Delete";
 
-            using var bus = RabbitHutch.CreateBus("host=ekucniljubimci-rmq");
-            //using var bus = RabbitHutch.CreateBus("host=localhost");
+            string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je izbrisana zivotinja \n-Id: {mappedEntity?.ZivotinjaId} \n-Naziv: {mappedEntity?.Naziv} \n-Cijena: {mappedEntity?.Cijena}";
 
-            bus.PubSub.Publish(mappedEntity);
+            rmqMail.RabbitMQSend(message);
 
             return _mapper.Map<DtoZivotinja>(dbObj);
         }

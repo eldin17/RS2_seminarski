@@ -8,6 +8,8 @@ import 'package:flutter_desktop/screens/zivotinje_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../models/rasa.dart';
+import '../providers/rase_provider.dart';
 import '../util/util.dart';
 import '../widgets/master_screen.dart';
 
@@ -172,7 +174,7 @@ Expanded _rightPart(
                             "Rasa",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(" - ${item.vrsta?.rasa}"),
+                          Text(" - ${item.vrsta?.rasa?.naziv}"),
                         ],
                       ),
                       Row(

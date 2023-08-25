@@ -3,6 +3,8 @@ import 'package:flutter_desktop/models/slika.dart';
 import 'package:flutter_desktop/screens/zivotinje_screen.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../models/rasa.dart';
+import '../models/search_result.dart';
 import '../models/vrsta.dart';
 import '../models/zivotinja.dart';
 import 'dart:io';
@@ -12,6 +14,7 @@ import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/rase_provider.dart';
 import '../util/util.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,9 +44,13 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
 
   late ZivotinjeProvider _zivotinjeProvider;
   late VrsteProvider _vrstaProvider;
+  late RaseProvider _raseProvider;
 
   Map<String, dynamic> _initialValueVrsta = {};
   Map<String, dynamic> _initialValueZivotinja = {};
+
+  SearchResult<Rasa>? raseData;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -53,6 +60,7 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
     _initialValueVrsta = {
       'naziv': widget.vrsta.naziv,
       'rasa': widget.vrsta.rasa,
+      'rasaId': widget.vrsta.rasaId,
       'opis': widget.vrsta.opis,
       'boja': widget.vrsta.boja,
       'starost': int.tryParse(widget.vrsta.starost.toString()),
@@ -69,8 +77,18 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
 
     _zivotinjeProvider = context.read<ZivotinjeProvider>();
     _vrstaProvider = context.read<VrsteProvider>();
+    _raseProvider = context.read<RaseProvider>();
 
     _loadedImages = widget.zivotinja.slike!;
+    initForm();
+  }
+
+  Future initForm() async {
+    raseData = await _raseProvider.get();
+    print(raseData);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -209,6 +227,7 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
                   Container(
                     width: 500,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                           child: FormBuilderTextField(
@@ -223,17 +242,48 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
                           ),
                         ),
                         Expanded(
-                          child: FormBuilderTextField(
-                            name: 'rasa',
-                            decoration: InputDecoration(labelText: "Rasa"),
+                          child: FormBuilderDropdown<int>(
+                            name: 'rasaId',
+                            decoration: InputDecoration(
+                              labelText: 'Vrsta',
+                              suffix: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _formKeyVrsta.currentState!.fields['rasaId']
+                                      ?.reset();
+                                },
+                              ),
+                              hintText: 'Vrsta',
+                            ),
+                            items: raseData?.data
+                                    .map((item) => DropdownMenuItem(
+                                          alignment:
+                                              AlignmentDirectional.center,
+                                          value: item.rasaId,
+                                          child: Text(item.naziv ?? ""),
+                                        ))
+                                    .toList() ??
+                                [],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Rasa je obavezna';
+                              if (value == null || value == 0) {
+                                return 'Vrsta je obavezna';
                               }
                               return null;
                             },
                           ),
                         ),
+                        // Expanded(
+                        //   child: FormBuilderTextField(
+                        //     name: 'rasa',
+                        //     decoration: InputDecoration(labelText: "Rasa"),
+                        //     validator: (value) {
+                        //       if (value == null || value.isEmpty) {
+                        //         return 'Rasa je obavezna';
+                        //       }
+                        //       return null;
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -277,7 +327,7 @@ class _ZivotinjeEditState extends State<ZivotinjeEdit> {
                         ),
                         Expanded(
                           child: FormBuilderCheckbox(
-                            initialValue: false,
+                            initialValue: widget.zivotinja.vrsta?.prostor,
                             title: Text("Potreban veci prostor"),
                             name: 'prostor',
                           ),

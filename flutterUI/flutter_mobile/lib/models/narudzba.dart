@@ -16,6 +16,8 @@ class Narudzba {
   int? kupacId;
   List<NarudzbaArtikal>? narudzbeArtikli;
   List<Zivotinja>? zivotinje;
+  String? paymentId;
+  String? paymentIntent;
 
   Narudzba({
     this.narudzbaId,
@@ -26,6 +28,8 @@ class Narudzba {
     this.kupacId,
     this.narudzbeArtikli,
     this.zivotinje,
+    this.paymentId,
+    this.paymentIntent,
   });
 
   factory Narudzba.fromJson(Map<String, dynamic> json) =>

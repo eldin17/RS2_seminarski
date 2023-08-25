@@ -22,5 +22,8 @@ namespace eKucniLjubimci.Services.Database
 
         public virtual List<Zivotinja> Zivotinje { get; set; }=new List<Zivotinja>();
 
+        public string PaymentId { get; set; } = "";
+        public string PaymentIntent { get; set; } = "";
+
     }
 }

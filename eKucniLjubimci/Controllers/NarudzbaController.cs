@@ -114,5 +114,11 @@ namespace eKucniLjubimci.Controllers
         {
             return await (_service as INarudzbaService).GetByKupac(id);
         }
+
+        [HttpPut("stripeReference/{id}")]
+        public virtual async Task<DtoNarudzba> StripeReference(int id, [FromBody] AddReference reference)
+        {
+            return await (_service as INarudzbaService).StripeReference(id, reference);
+        }
     }
 }

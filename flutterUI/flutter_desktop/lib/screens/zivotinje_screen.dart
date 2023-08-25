@@ -76,19 +76,19 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                labelText: "Vrsta",
+                labelText: "Vrsta (pas, macka...)",
                 prefixIcon: Icon(Icons.search),
               ),
-              controller: _vrstaController,
+              controller: _rasaController,
             ),
           ),
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                labelText: "Rasa",
+                labelText: "Rasa (labrador, papagaj...)",
                 prefixIcon: Icon(Icons.search),
               ),
-              controller: _rasaController,
+              controller: _vrstaController,
             ),
           ),
           Container(
@@ -188,7 +188,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
             const DataColumn(
               label: const Expanded(
                 child: const Text(
-                  "Vrsta",
+                  "Rasa",
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -196,7 +196,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
             const DataColumn(
               label: const Expanded(
                 child: const Text(
-                  "Rasa",
+                  "Vrsta",
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -245,7 +245,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                             DataCell(
                                 Text(formatNumber(e.cijena)?.toString() ?? "")),
                             DataCell(Text(e.vrsta?.naziv?.toString() ?? "")),
-                            DataCell(Text(e.vrsta?.rasa?.toString() ?? "")),
+                            DataCell(Text(e.vrsta?.rasa?.naziv ?? "")),
                             DataCell(
                               e.slike?[0].putanja != ""
                                   ? Container(

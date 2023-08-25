@@ -3,10 +3,12 @@ import 'package:flutter_desktop/models/narudzba.dart';
 import 'package:flutter_desktop/models/narudzba_artikal.dart';
 import 'package:flutter_desktop/models/search_result.dart';
 import 'package:flutter_desktop/providers/artikli_provider.dart';
+import 'package:flutter_desktop/providers/rase_provider.dart';
 import 'package:flutter_desktop/screens/artikli_detalji.dart';
 import 'package:provider/provider.dart';
 
 import '../models/kupac.dart';
+import '../models/rasa.dart';
 import '../models/zivotinja.dart';
 import '../providers/kupac_provider.dart';
 import '../providers/narudzbe_provider.dart';
@@ -155,10 +157,8 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
                   rows: (narudzba.zivotinje != null || narudzba.zivotinje != [])
                       ? narudzba.zivotinje!
                               .map((Zivotinja e) => DataRow(cells: [
-                                    DataCell(
-                                        Text(e.vrsta?.naziv.toString() ?? "")),
-                                    DataCell(
-                                        Text(e.vrsta?.rasa.toString() ?? "")),
+                                    DataCell(Text(e.vrsta?.naziv ?? "")),
+                                    DataCell(Text(e.vrsta?.rasa?.naziv ?? "")),
                                     DataCell(Text(
                                         "${formatNumber(e.cijena)?.toString()} KM")),
                                   ]))
@@ -202,6 +202,24 @@ class _NarudzbeDetaljiState extends State<NarudzbeDetalji> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(" - ${narudzba.totalFinal} KM"),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "PaymentID",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(" - ${narudzba.paymentId}"),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "PaymentIntent",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(" - ${narudzba.paymentIntent}"),
                 ],
               ),
             ],

@@ -18,6 +18,12 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         public NovostService(DataContext context, IMapper mapper) : base(context, mapper)
         {
         }
+        public override void SendMail()
+        {
+            string message = $"\nPoruka funkcije Add \nUpravo je dodana novost";
+
+            rmqMail.RabbitMQSend(message);
+        }
 
         public async Task<DtoNovost> Delete(int id)
         {

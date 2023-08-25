@@ -8,12 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="7.5.3" />
+    <PackageReference Include="MailKit" Version="4.1.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eKucniLjubimci.Model\eKucniLjubimci.Model.csproj" />
     <ProjectReference Include="..\eKucniLjubimci.Services\eKucniLjubimci.Services.csproj" />
   </ItemGroup>
 

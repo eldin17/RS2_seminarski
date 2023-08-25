@@ -26,6 +26,8 @@ namespace eKucniLjubimci.Services
 
             CreateMap<Uloga, DtoUloga>().ReverseMap();
 
+            CreateMap<Rasa, DtoRasa>().ReverseMap();
+
             CreateMap<Slika, DtoSlika>().ReverseMap();
 
             CreateMap<NarudzbaArtikal, DtoNarudzbaArtikal>().ReverseMap();

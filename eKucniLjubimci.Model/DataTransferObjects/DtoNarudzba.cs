@@ -19,5 +19,7 @@ namespace eKucniLjubimci.Model.DataTransferObjects
         public virtual List<DtoNarudzbaArtikal> NarudzbeArtikli { get; set; }
 
         public virtual List<DtoZivotinja> Zivotinje { get; set; }
+        public string PaymentId { get; set; }
+        public string PaymentIntent { get; set; }
     }
 }

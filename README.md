@@ -28,6 +28,13 @@ password - sifra4
 Zbog lakseg testiranja aplikacije, potrebno je unijeti Stripe Publishable Key kroz samu aplikaciju (mobile dio).
 Na ekranu "Narudzbe", nakon klika na dugme "Plati", prikazuje se ekran sa poljem za unos Stripe Publishable Key-a.
 
+**Napomena za RabbitMQ **
+Za slanje mail-ova se koristi Ethereal fake smtp servis (https://ethereal.email/) 
+Zbog lakseg testiranja jedna adresa se koristi za slanje i primanje mail poruka 
+Adresa: rocky58@ethereal.email 
+Sifra: 4VufRUy2Ayw98CsKR3 
+Ovo se moze promijeniti i dodatno konfigurisati kroz docker-compose.yml fajl (za potrebe testiranja moguce je promijeniti adrese ili u slucaju isteka trajanja adrese moguce je generisati novu) 
+
 **SQL**
 port - localhost, 1417
 login - sa

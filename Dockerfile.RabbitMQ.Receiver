@@ -1,0 +1,26 @@
+# Use the base image with the .NET SDK to build your application
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the .csproj and .sln files to the container
+COPY eKucniLjubimci.RabbitMQ.Email/*.csproj ./
+COPY eKucniLjubimci.RabbitMQ.Email/*.sln ./
+
+# Restore NuGet packages
+RUN dotnet restore
+
+# Copy the rest of the application code to the container
+COPY eKucniLjubimci.RabbitMQ.Email/ ./
+
+# Build the application with Release configuration
+RUN dotnet build -c Release -o out
+
+# Build a smaller runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/out ./
+
+# Start your application
+CMD ["dotnet", "eKucniLjubimci.RabbitMQ.Email.dll"]

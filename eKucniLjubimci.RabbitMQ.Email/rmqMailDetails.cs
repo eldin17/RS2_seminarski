@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eKucniLjubimci.Services
+namespace eKucniLjubimci.RabbitMQ.Email
 {
     public class rmqMailDetails
     {

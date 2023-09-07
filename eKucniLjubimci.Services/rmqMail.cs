@@ -15,18 +15,24 @@ namespace eKucniLjubimci.Services
         {   
             rmqMailDetails mailDetalji = new rmqMailDetails
             {
-                HostName= Environment.GetEnvironmentVariable("RabbitMQ_HostName"),
-                User = Environment.GetEnvironmentVariable("RabbitMQ_UserName"),
-                Password = Environment.GetEnvironmentVariable("RabbitMQ_Password"),
-                Port = Environment.GetEnvironmentVariable("RabbitMQ_Port"),
-                AdressFrom = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressFrom"),
-                AdressTo = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressTo"),
-                MailPassword = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressPassword"),
-                SmtpMail = Environment.GetEnvironmentVariable("RabbitMQ_MailSMTP"),
+                HostName = Environment.GetEnvironmentVariable("RabbitMQ_HostName")??"localhost",
+                User = Environment.GetEnvironmentVariable("RabbitMQ_UserName") ?? "guest",
+                Password = Environment.GetEnvironmentVariable("RabbitMQ_Password") ?? "guest",
+                Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ_Port") ?? "5672"),
+                AdressFrom = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressFrom") ?? "murl87@ethereal.email",
+                AdressTo = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressTo") ?? "murl87@ethereal.email",
+                MailPassword = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressPassword") ?? "jCf9JwZUVATxEkvv1F",
+                SmtpMail = Environment.GetEnvironmentVariable("RabbitMQ_MailSMTP") ?? "smtp.ethereal.email",
+                MailPort= int.Parse(Environment.GetEnvironmentVariable("RabbitMQ_MailPort") ?? "587"),
                 EmailContent =mailContent                
             };
 
-            var factory = new ConnectionFactory { HostName = mailDetalji.HostName, Port = int.Parse(mailDetalji.Port), UserName = mailDetalji.User, Password = mailDetalji.Password };
+            var factory = new ConnectionFactory { 
+                HostName = mailDetalji.HostName, 
+                Port = mailDetalji.Port, 
+                UserName = mailDetalji.User, 
+                Password = mailDetalji.Password 
+            };
 
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();

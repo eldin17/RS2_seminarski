@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eKucniLjubimci.Model\eKucniLjubimci.Model.csproj" />
-    <ProjectReference Include="..\eKucniLjubimci.RabbitMQ.Email\eKucniLjubimci.RabbitMQ.Email.csproj" />
     <ProjectReference Include="..\eKucniLjubimci.Services\eKucniLjubimci.Services.csproj" />
   </ItemGroup>
 

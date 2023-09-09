@@ -6,6 +6,8 @@ import 'package:flutter_desktop/models/rasa.dart';
 import 'package:flutter_desktop/models/zivotinja.dart';
 import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
+import 'package:flutter_desktop/screens/zivotinje_add_v.dart';
+import 'package:flutter_desktop/widgets/master_screen.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -249,6 +251,20 @@ class _ZivotinjeAddState extends State<ZivotinjeAdd> {
                         }
                     : null,
                 child: Text('3.Postavi slike'),
+              ),
+              FilledButton(
+                onPressed: () async => {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => MasterScreen(
+                        prikaz: ZivotinjaAddVScreen(
+                          onRowUpdated: widget.onRowUpdated,
+                        ),
+                      ),
+                    ),
+                  ),
+                },
+                child: Text('TEST'),
               ),
               ElevatedButton(
                 onPressed: buttonProgressNotifier.value == 0 ||

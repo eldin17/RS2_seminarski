@@ -1,99 +1,69 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_desktop/models/artikal.dart';
-import 'package:flutter_desktop/models/kategorija.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
-
-import '../models/search_result.dart';
-import '../providers/artikli_provider.dart';
-import '../providers/kategorije_provider.dart';
-import '../util/util.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class ArtikliAdd extends StatefulWidget {
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../models/zivotinja.dart';
+import '../providers/zivotinje_provider.dart';
+import '../widgets/master_screen.dart';
+
+class ZivotinjaAddZScreen extends StatefulWidget {
+  int vrstaIdhelper;
   final VoidCallback onRowUpdated;
 
-  const ArtikliAdd({super.key, required this.onRowUpdated});
+  ZivotinjaAddZScreen(
+      {super.key, required this.onRowUpdated, required this.vrstaIdhelper});
 
   @override
-  State<ArtikliAdd> createState() => _ArtikliAddState();
+  State<ZivotinjaAddZScreen> createState() => _ZivotinjaAddZScreenState();
 }
 
-class _ArtikliAddState extends State<ArtikliAdd> {
-  Artikal artikal = Artikal();
-  int artikalIdhelper = 0;
-  int kategorijaIdhelper = 0;
+class _ZivotinjaAddZScreenState extends State<ZivotinjaAddZScreen> {
+  Zivotinja zivotinja = Zivotinja();
+  int zivotinjaIdhelper = 0;
   ValueNotifier<int> buttonProgressNotifier = ValueNotifier<int>(0);
-
-  final _formKeyArtikal = GlobalKey<FormBuilderState>();
+  final _formKeyZivotinja = GlobalKey<FormBuilderState>();
   final _formKey = GlobalKey<FormBuilderState>();
   List<File> _selectedImages = [];
-
-  late ArtikliProvider _artikliProvider;
-  late KategorijeProvider _kategorijeProvider;
-  bool isLoading = true;
-
-  SearchResult<Kategorija>? kategorijeResult;
-  Map<String, dynamic> _initialValueArtikal = {};
+  late ZivotinjeProvider _zivotinjeProvider;
+  Map<String, dynamic> _initialValueZivotinja = {};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    _initialValueArtikal = {
-      'naziv': artikal.naziv,
-      'cijena': double.tryParse(artikal.cijena.toString()),
-      'opis': artikal.opis,
-      'kategorijaId': int.tryParse(artikal.kategorijaId.toString()),
+    _initialValueZivotinja = {
+      'naziv': zivotinja.naziv,
+      'napomena': "",
+      'cijena': double.tryParse(zivotinja.cijena.toString()),
+      'vrstaId': 0,
     };
 
-    _artikliProvider = context.read<ArtikliProvider>();
-    _kategorijeProvider = context.read<KategorijeProvider>();
-
-    initForm();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
-  Future initForm() async {
-    kategorijeResult = await _kategorijeProvider.get();
-    print(kategorijeResult?.data);
-
-    setState(() {
-      isLoading = false;
-    });
+    _zivotinjeProvider = context.read<ZivotinjeProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 50,
+        ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                isLoading ? Container() : _buildForm1(),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
+            _buildForm1(),
             SizedBox(
               width: 15,
             ),
-            _buildForm3(),
+            _buildForm2(),
           ],
         ),
         SizedBox(
-          height: 15,
+          height: 10,
         ),
         _buttons(context, buttonProgressNotifier, widget.onRowUpdated),
       ],
@@ -104,6 +74,7 @@ class _ArtikliAddState extends State<ArtikliAdd> {
       ValueNotifier<int> buttonProgressNotifier, VoidCallback funkcijaRefresh) {
     return Expanded(
       child: Container(
+        width: 900,
         alignment: Alignment.topRight,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -135,7 +106,7 @@ class _ArtikliAddState extends State<ArtikliAdd> {
                 child: Text('Završi'),
               ),
               SizedBox(
-                width: 15,
+                width: 20,
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -156,108 +127,67 @@ class _ArtikliAddState extends State<ArtikliAdd> {
 
   FormBuilder _buildForm1() {
     return FormBuilder(
-      key: _formKeyArtikal,
-      initialValue: _initialValueArtikal,
+      key: _formKeyZivotinja,
+      initialValue: _initialValueZivotinja,
       child: Column(
         children: [
           Card(
             child: Padding(
               padding: const EdgeInsets.all(25.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 500,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: FormBuilderTextField(
-                            name: 'naziv',
-                            decoration: InputDecoration(labelText: "Naziv"),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Naziv je obavezan';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: FormBuilderTextField(
-                            name: 'cijena',
-                            decoration:
-                                InputDecoration(labelText: "Cijena (KM)"),
-                            keyboardType: TextInputType.number,
-                            valueTransformer: (value) =>
-                                double.tryParse(value ?? ''),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Cijena je obavezna';
-                              }
-                              final parsedValue = double.tryParse(value);
-                              if (parsedValue == null) {
-                                return 'Cijena mora biti broj';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 500,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 500,
-                          child: FormBuilderTextField(
-                            name: 'opis',
-                            maxLines: 2,
-                            decoration: InputDecoration(labelText: "Opis"),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Opis je obavezan';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    child: Container(
-                      width: 500,
-                      child: FormBuilderDropdown<String>(
-                        name: 'kategorijaId',
-                        decoration: InputDecoration(
-                          labelText: 'Kategorija',
-                          suffix: IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              _formKeyArtikal
-                                  .currentState!.fields['kategorijaId']
-                                  ?.reset();
-                            },
-                          ),
-                          hintText: 'Vrsta proizvoda',
-                        ),
-                        items: kategorijeResult?.data
-                                .map((item) => DropdownMenuItem(
-                                      alignment: AlignmentDirectional.center,
-                                      value: item.kategorijaId.toString(),
-                                      child: Text(item.naziv ?? ""),
-                                    ))
-                                .toList() ??
-                            [],
+                    child: Expanded(
+                      child: FormBuilderTextField(
+                        name: 'naziv',
+                        decoration: InputDecoration(labelText: "Naziv"),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Kategorija je obavezna';
+                            return 'Naziv je obavezan';
                           }
                           return null;
                         },
                       ),
+                    ),
+                  ),
+                  Container(
+                    width: 500,
+                    child: Expanded(
+                      child: FormBuilderTextField(
+                        name: 'cijena',
+                        decoration: InputDecoration(labelText: "Cijena (KM)"),
+                        keyboardType: TextInputType.number,
+                        valueTransformer: (value) =>
+                            double.tryParse(value ?? ''),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Cijena je obavezna';
+                          }
+                          final parsedValue = int.tryParse(value);
+                          if (parsedValue == null) {
+                            return 'Cijena mora biti broj';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 500,
+                    child: FormBuilderTextField(
+                      name: 'napomena',
+                      maxLines: 2,
+                      decoration: InputDecoration(labelText: "Napomena"),
+                    ),
+                  ),
+                  Container(
+                    height: 0,
+                    width: 0,
+                    child: FormBuilderTextField(
+                      name: 'vrstaId',
+                      initialValue: '0',
+                      enabled: false,
                     ),
                   ),
                   SizedBox(
@@ -267,14 +197,24 @@ class _ArtikliAddState extends State<ArtikliAdd> {
                       onPressed: buttonProgressNotifier.value == 0
                           ? () async {
                               try {
-                                if (_formKeyArtikal.currentState
+                                if (_formKeyZivotinja.currentState
                                         ?.saveAndValidate() ==
                                     true) {
-                                  print(_formKeyArtikal.currentState?.value);
+                                  print(_formKeyZivotinja.currentState?.value);
 
-                                  var responseArtikal = await _artikliProvider
-                                      .add(_formKeyArtikal.currentState?.value);
-                                  artikalIdhelper = responseArtikal.artikalId!;
+                                  Map<String, dynamic> modifiedValue =
+                                      Map<String, dynamic>.from(
+                                          _formKeyZivotinja
+                                              .currentState!.value);
+                                  modifiedValue['vrstaId'] =
+                                      widget.vrstaIdhelper;
+                                  print("moje${modifiedValue}");
+
+                                  var responseZivotinja =
+                                      await _zivotinjeProvider
+                                          .add(modifiedValue);
+                                  zivotinjaIdhelper =
+                                      responseZivotinja.zivotinjaId!;
                                   setState(() {
                                     buttonProgressNotifier.value++;
                                   });
@@ -308,11 +248,11 @@ class _ArtikliAddState extends State<ArtikliAdd> {
     );
   }
 
-  Expanded _buildForm3() {
+  Expanded _buildForm2() {
     return Expanded(
       child: Container(
         width: 340,
-        height: 485,
+        height: 420,
         child: Card(
           child: SingleChildScrollView(
             child: Padding(
@@ -345,7 +285,7 @@ class _ArtikliAddState extends State<ArtikliAdd> {
                             );
                           }).toList(),
                         ),
-                        SizedBox(height: 100.0),
+                        SizedBox(height: 50.0),
                         ElevatedButton(
                           onPressed: _pickImages,
                           child: Text('Odaberi slike'),
@@ -375,16 +315,11 @@ class _ArtikliAddState extends State<ArtikliAdd> {
 
   Future<void> _submitForm(BuildContext context) async {
     if (_formKey.currentState!.saveAndValidate()) {
-      final provider = Provider.of<ArtikliProvider>(context, listen: false);
-      // final id = _formKey.currentState!.fields['id']!.value as int;
-      final id = artikalIdhelper;
+      final provider = Provider.of<ZivotinjeProvider>(context, listen: false);
+      final id = zivotinjaIdhelper;
 
       await provider.uploadImages(id, _selectedImages);
-      // Reset form and clear selected images
       _formKey.currentState!.reset();
-      // setState(() {
-      //   _selectedImages.clear();
-      // });
     }
   }
 }

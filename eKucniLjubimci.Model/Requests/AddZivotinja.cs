@@ -12,8 +12,7 @@ namespace eKucniLjubimci.Model.Requests
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Obavezno polje -Naziv-")]
         public string Naziv { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage ="Obavezno polje -Napomena-")]
-        public string Napomena { get; set; }
+        public string Napomena { get; set; } = "";
         [Required(ErrorMessage = "Obavezno polje -Cijena-")]
         [Range(1,100000,ErrorMessage ="Cijena mora biti u rasponu 1-100 000")]
         public decimal Cijena { get; set; }

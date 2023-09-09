@@ -4,6 +4,7 @@ import 'package:flutter_desktop/models/korisnicki_nalog.dart';
 import 'package:flutter_desktop/models/osoba.dart';
 import 'package:flutter_desktop/models/registracija_model.dart';
 import 'package:flutter_desktop/providers/login_register.dart';
+import 'package:flutter_desktop/screens/registracija_osoba.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -257,6 +258,16 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                         }
                       : null,
                   child: Text("3.Dodaj prodavca")),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => RegistracijaOsobaScreen(),
+                    ),
+                  );
+                },
+                child: Text('TEST'),
+              ),
               ElevatedButton(
                 onPressed: buttonProgressNotifier.value == 3 &&
                         _imageFile != null

@@ -3,7 +3,9 @@ import 'package:flutter_mobile/screens/artikli_detalji.dart';
 import 'package:provider/provider.dart';
 
 import '../models/artikal.dart';
+import '../models/kategorija.dart';
 import '../providers/artikli_provider.dart';
+import '../providers/kategorije_provider.dart';
 import '../util/util.dart';
 import '../widgets/master_screen.dart';
 
@@ -16,6 +18,9 @@ class ArtikliScreen extends StatefulWidget {
 
 class _ArtikliScreenState extends State<ArtikliScreen> {
   List<Artikal> artikli = [];
+  List<Kategorija> kategorije = [];
+  late KategorijeProvider _kategorijeProvider;
+
   late ArtikliProvider _artikliProvider;
   bool isLoading = true;
   bool isFilterVisible = false;
@@ -23,18 +28,27 @@ class _ArtikliScreenState extends State<ArtikliScreen> {
   TextEditingController _nazivController = new TextEditingController();
   TextEditingController _cijenaDoController = new TextEditingController();
   TextEditingController _cijenaOdController = new TextEditingController();
+  String? _odabranaKategorijaId;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _kategorijeProvider = context.read<KategorijeProvider>();
+
     _artikliProvider = context.read<ArtikliProvider>();
     initForm();
   }
 
   Future initForm() async {
+    var kategorije2 = await _kategorijeProvider.get();
     var artikli2 = await _artikliProvider.get();
+    var kategorijaSve = new Kategorija();
+    kategorijaSve.naziv = "Sve";
+    kategorijaSve.kategorijaId = 0;
     setState(() {
+      kategorije = kategorije2.data;
+      kategorije.add(kategorijaSve);
       artikli = artikli2.data;
       isLoading = false;
     });
@@ -138,6 +152,27 @@ class _ArtikliScreenState extends State<ArtikliScreen> {
                 ),
               ],
             ),
+            Container(
+              child: DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: "Kategorija",
+                  prefixIcon: Icon(Icons.category),
+                ),
+                value: _odabranaKategorijaId,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _odabranaKategorijaId = newValue;
+                  });
+                },
+                items: kategorije.map((Kategorija kategorija) {
+                  return DropdownMenuItem<String>(
+                    value: kategorija.kategorijaId.toString(),
+                    child: Text(kategorija.naziv!),
+                  );
+                }).toList(),
+              ),
+            ),
             Row(
               children: [
                 Expanded(
@@ -161,6 +196,9 @@ class _ArtikliScreenState extends State<ArtikliScreen> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 20,
             ),
             Container(
               width: 350,
@@ -193,14 +231,38 @@ class _ArtikliScreenState extends State<ArtikliScreen> {
                       'naziv': _nazivController.text,
                       'cijenaDo': cijenaDo,
                       'cijenaOd': cijenaOd,
+                      'kategorijaId': int.tryParse(_odabranaKategorijaId ?? "")
                     });
                     setState(() {
                       artikli = data.data;
                       isFilterVisible = false;
                     });
                   },
-                  child: Text("Pretrazi")),
-            )
+                  child: Text("Pretraži")),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextButton(
+              onPressed: () async {
+                var data = await _artikliProvider.get();
+
+                setState(() {
+                  _nazivController.value = TextEditingValue.empty;
+                  _odabranaKategorijaId = '0';
+                  _cijenaDoController.value = TextEditingValue.empty;
+                  _cijenaOdController.value = TextEditingValue.empty;
+                  artikli = data.data;
+                  isFilterVisible = false;
+                });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.cancel_outlined),
+                  Text(" Obriši filtere")
+                ],
+              ),
+            ),
           ],
         ),
       ),

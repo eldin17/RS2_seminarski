@@ -73,6 +73,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      height: 130,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage("assets/images/Logo.jpg"),
+                        fit: BoxFit.contain,
+                      )),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Text(
+                      "Dobrodošli u Pet Shop\n\nVaša oaza za kućne ljubimce! \nIstražite našu široku ponudu životinja i proizvoda, te pronađite savršene poslastice za svog ljubimca.\n",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Container(
                       width: 200,
                       height: 20,
                       alignment: Alignment.center,

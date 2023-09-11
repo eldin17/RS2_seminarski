@@ -14,7 +14,7 @@ class KategorijeProvider with ChangeNotifier {
 
   KategorijeProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7152/");
+        defaultValue: "http://10.0.2.2:7152/");
   }
 
   Future<SearchResult<Kategorija>> get({dynamic filter}) async {

@@ -34,8 +34,3 @@ Zbog lakseg testiranja jedna adresa se koristi za slanje i primanje mail poruka
 Adresa: murl87@ethereal.email
 Sifra: jCf9JwZUVATxEkvv1F 
 Ovo se moze promijeniti i dodatno konfigurisati kroz docker-compose.yml fajl (za potrebe testiranja moguce je promijeniti adrese ili u slucaju isteka trajanja adrese moguce je generisati novu) 
-
-**SQL**
-port - localhost, 1417
-login - sa
-password - Chelsea321!

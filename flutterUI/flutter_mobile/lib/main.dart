@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobile/providers/artikli_provider.dart';
+import 'package:flutter_mobile/providers/kategorije_provider.dart';
 import 'package:flutter_mobile/providers/kupac_provider.dart';
 import 'package:flutter_mobile/providers/login_register.dart';
 import 'package:flutter_mobile/providers/lokacija.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_mobile/providers/osoba_provider.dart';
 import 'package:flutter_mobile/providers/zivotinje_provider.dart';
 import 'package:flutter_mobile/screens/home.dart';
 import 'package:flutter_mobile/screens/registracija.dart';
+import 'package:flutter_mobile/screens/registracija_osoba.dart';
 import 'package:flutter_mobile/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +35,7 @@ void main() async {
         // ChangeNotifierProvider(create: (_) => VrsteProvider()),
         ChangeNotifierProvider(create: (_) => OsobaProvider()),
         // ChangeNotifierProvider(create: (_) => ProdavacProvider()),
-        // ChangeNotifierProvider(create: (_) => KategorijeProvider()),
+        ChangeNotifierProvider(create: (_) => KategorijeProvider()),
         ChangeNotifierProvider(create: (_) => NarudzbeProvider()),
       ],
       child: const MyMaterialApp(),
@@ -176,7 +178,7 @@ class _LoginPage2State extends State<LoginPage2> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => RegistracijaScreen(),
+                      builder: (context) => RegistracijaOsobaScreen(),
                     ),
                   );
                 },

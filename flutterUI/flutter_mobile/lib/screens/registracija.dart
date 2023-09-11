@@ -8,6 +8,7 @@ import 'package:flutter_mobile/models/registracija_model.dart';
 import 'package:flutter_mobile/providers/kupac_provider.dart';
 import 'package:flutter_mobile/providers/login_register.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_mobile/screens/registracija_osoba.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -131,6 +132,16 @@ class _RegistracijaScreenState extends State<RegistracijaScreen> {
                   children: [
                     Column(
                       children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RegistracijaOsobaScreen(),
+                              ),
+                            );
+                          },
+                          child: Text("TEST"),
+                        ),
                         _buildForm1(),
                         SizedBox(
                           height: 20,

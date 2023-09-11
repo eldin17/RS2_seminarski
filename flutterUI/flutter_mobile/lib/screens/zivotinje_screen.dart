@@ -177,6 +177,9 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               width: 350,
               height: 30,
@@ -216,7 +219,30 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                     });
                   },
                   child: Text("Pretrazi")),
-            )
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextButton(
+              onPressed: () async {
+                var data = await _zivotinjeProvider.get();
+
+                setState(() {
+                  _rasa2Controller.value = TextEditingValue.empty;
+                  _rasaController.value = TextEditingValue.empty;
+                  _cijenaDoController.value = TextEditingValue.empty;
+                  _cijenaOdController.value = TextEditingValue.empty;
+                  zivotinje = data.data;
+                  isFilterVisible = false;
+                });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.cancel_outlined),
+                  Text(" Obriši filtere")
+                ],
+              ),
+            ),
           ],
         ),
       ),

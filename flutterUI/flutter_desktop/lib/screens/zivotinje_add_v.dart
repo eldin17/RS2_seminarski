@@ -104,16 +104,13 @@ class _ZivotinjaAddVScreenState extends State<ZivotinjaAddVScreen> {
                 width: 20,
               ),
               ElevatedButton(
-                onPressed: buttonProgressNotifier.value == 0 ||
-                        buttonProgressNotifier.value == 3
-                    ? () async {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          buttonProgressNotifier.value = 0;
-                        });
-                        funkcijaRefresh();
-                      }
-                    : null,
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    buttonProgressNotifier.value = 0;
+                  });
+                  funkcijaRefresh();
+                },
                 child: Text("Nazad"),
               ),
             ],

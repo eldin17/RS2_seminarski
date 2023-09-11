@@ -50,6 +50,10 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             {
                 data = data.Where(x => x.Cijena >= search.CijenaOd);
             }
+            if (search.KategorijaId!=null&&search.KategorijaId>0)
+            {
+                data = data.Where(x => x.KategorijaId == search.KategorijaId);
+            }
 
             return base.AddFilter(data, search);
         }

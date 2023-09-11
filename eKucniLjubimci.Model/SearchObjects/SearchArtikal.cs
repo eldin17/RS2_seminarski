@@ -11,5 +11,7 @@ namespace eKucniLjubimci.Model.SearchObjects
         public string? Naziv { get; set; }
         public decimal? CijenaDo { get; set; }
         public decimal? CijenaOd { get; set; }
+        public int? KategorijaId { get; set; }
+
     }
 }

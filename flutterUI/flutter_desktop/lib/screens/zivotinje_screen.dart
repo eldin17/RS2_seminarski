@@ -117,6 +117,25 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
               ],
             ),
           ),
+          Tooltip(
+            message: "Očisti filtere",
+            child: TextButton(
+              onPressed: () async {
+                var data = await _zivotinjeProvider.get();
+
+                setState(() {
+                  _vrstaController.value = TextEditingValue.empty;
+                  _rasaController.value = TextEditingValue.empty;
+                  _cijenaDoController.value = TextEditingValue.empty;
+                  _cijenaOdController.value = TextEditingValue.empty;
+                  widget.podaci = data;
+                });
+              },
+              child: Row(
+                children: [Icon(Icons.cancel_outlined)],
+              ),
+            ),
+          ),
           FilledButton(
               onPressed: () async {
                 var cijenaDo;

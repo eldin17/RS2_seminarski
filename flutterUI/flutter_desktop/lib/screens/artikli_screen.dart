@@ -3,8 +3,10 @@ import 'package:flutter_desktop/screens/artikli_detalji.dart';
 import 'package:provider/provider.dart';
 
 import '../models/artikal.dart';
+import '../models/kategorija.dart';
 import '../models/search_result.dart';
 import '../providers/artikli_provider.dart';
+import '../providers/kategorije_provider.dart';
 import '../util/util.dart';
 import '../widgets/master_screen.dart';
 import 'artikli_add.dart';
@@ -23,12 +25,36 @@ class _ArtilkliScreenState extends State<ArtilkliScreen> {
   TextEditingController _cijenaDoController = new TextEditingController();
   TextEditingController _cijenaOdController = new TextEditingController();
   late ArtikliProvider _artikliProvider;
+  List<Kategorija> kategorije = [];
+  late KategorijeProvider _kategorijeProvider;
+  String? _odabranaKategorijaId;
+  bool isLoading = true;
 
   void refreshTable() async {
     var data = await _artikliProvider.get();
     setState(() {
       widget.podaci = data;
       print("Tabela REFRESH");
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _kategorijeProvider = context.read<KategorijeProvider>();
+    initForm();
+  }
+
+  Future initForm() async {
+    var kategorije2 = await _kategorijeProvider.get();
+    var kategorijaSve = new Kategorija();
+    kategorijaSve.naziv = "Sve";
+    kategorijaSve.kategorijaId = 0;
+    setState(() {
+      kategorije = kategorije2.data;
+      kategorije.add(kategorijaSve);
+      isLoading = false;
     });
   }
 
@@ -81,7 +107,7 @@ class _ArtilkliScreenState extends State<ArtilkliScreen> {
             ),
           ),
           Container(
-            constraints: BoxConstraints(maxWidth: 280),
+            constraints: BoxConstraints(maxWidth: 450),
             child: Row(
               children: [
                 Expanded(
@@ -102,43 +128,89 @@ class _ArtilkliScreenState extends State<ArtilkliScreen> {
                     controller: _cijenaDoController,
                   ),
                 ),
+                Expanded(
+                  child: Container(
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Kategorija",
+                        prefixIcon: Icon(Icons.category),
+                      ),
+                      value: _odabranaKategorijaId,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _odabranaKategorijaId = newValue;
+                        });
+                      },
+                      items: kategorije.map((Kategorija kategorija) {
+                        return DropdownMenuItem<String>(
+                          value: kategorija.kategorijaId.toString(),
+                          child: Text(kategorija.naziv!),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          FilledButton(
+          Tooltip(
+            message: "Očisti filtere",
+            child: TextButton(
               onPressed: () async {
-                var cijenaDo;
-                var cijenaOd;
-                try {
-                  cijenaDo = double.parse(_cijenaDoController.text);
-                } catch (e) {
-                  cijenaDo = 0;
-                }
-                try {
-                  cijenaOd = double.parse(_cijenaOdController.text);
-                } catch (e) {
-                  cijenaOd = 0;
-                }
-                if (cijenaDo > 0 && cijenaOd > 0 && (cijenaDo < cijenaOd)) {
-                  setState(() {
-                    var temp = _cijenaDoController.text;
-                    _cijenaDoController.text = _cijenaOdController.text;
-                    _cijenaOdController.text = temp;
-                  });
-                  var temp = cijenaDo;
-                  cijenaDo = cijenaOd;
-                  cijenaOd = temp;
-                }
-                var data = await _artikliProvider.get(filter: {
-                  'naziv': _nazivController.text,
-                  'cijenaDo': cijenaDo,
-                  'cijenaOd': cijenaOd,
-                });
+                var data = await _artikliProvider.get();
+
                 setState(() {
-                  widget?.podaci = data;
+                  _nazivController.value = TextEditingValue.empty;
+                  _odabranaKategorijaId = '0';
+                  _cijenaDoController.value = TextEditingValue.empty;
+                  _cijenaOdController.value = TextEditingValue.empty;
+                  widget.podaci = data;
                 });
               },
-              child: Text("Pretraga")),
+              child: Row(
+                children: [Icon(Icons.cancel_outlined)],
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              FilledButton(
+                  onPressed: () async {
+                    var cijenaDo;
+                    var cijenaOd;
+                    try {
+                      cijenaDo = double.parse(_cijenaDoController.text);
+                    } catch (e) {
+                      cijenaDo = 0;
+                    }
+                    try {
+                      cijenaOd = double.parse(_cijenaOdController.text);
+                    } catch (e) {
+                      cijenaOd = 0;
+                    }
+                    if (cijenaDo > 0 && cijenaOd > 0 && (cijenaDo < cijenaOd)) {
+                      setState(() {
+                        var temp = _cijenaDoController.text;
+                        _cijenaDoController.text = _cijenaOdController.text;
+                        _cijenaOdController.text = temp;
+                      });
+                      var temp = cijenaDo;
+                      cijenaDo = cijenaOd;
+                      cijenaOd = temp;
+                    }
+                    var data = await _artikliProvider.get(filter: {
+                      'naziv': _nazivController.text,
+                      'cijenaDo': cijenaDo,
+                      'cijenaOd': cijenaOd,
+                      'kategorijaId': int.tryParse(_odabranaKategorijaId ?? "")
+                    });
+                    setState(() {
+                      widget?.podaci = data;
+                    });
+                  },
+                  child: Text("Pretraga")),
+            ],
+          ),
         ],
       ),
     );

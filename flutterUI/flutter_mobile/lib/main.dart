@@ -144,6 +144,7 @@ class _LoginPage2State extends State<LoginPage2> {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => MasterScreen(
+                            uslov: true,
                             child: HomeScreen(),
                             index: 0,
                           ),

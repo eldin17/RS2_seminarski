@@ -25,8 +25,9 @@ username - korisnik4
 password - sifra4
 
 **Napomena za Stripe**
-Zbog lakseg testiranja aplikacije, potrebno je unijeti Stripe Publishable Key kroz samu aplikaciju (mobile dio).
-Na ekranu "Narudzbe", nakon klika na dugme "Plati", prikazuje se ekran sa poljem za unos Stripe Publishable Key-a.
+Postoje dva nacina konfiguracije,
+-kroz environment 'flutter run --dart-define=stripePublishableKey=abcd' (opcija dostupna samo ako se koristi ova komanda pri pokretanju)
+-kroz samu mobilnu aplikaciju je omoguceno unosenje Publishable Key-a (opcija uvijek dostupna, za unosenje ili za promjenu vec unesenog key-a kroz environment)
 
 **Napomena za RabbitMQ**
 Za slanje mail-ova se koristi Ethereal fake smtp servis (https://ethereal.email/) 

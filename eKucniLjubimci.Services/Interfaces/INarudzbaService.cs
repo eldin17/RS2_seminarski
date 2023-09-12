@@ -20,6 +20,7 @@ namespace eKucniLjubimci.Services.Interfaces
         Task<DtoNarudzba> RemoveZivotinja(int narudzbaId, int zivotinjaId);
 
         Task<DtoNarudzba> Activate(int narudzbaId);
+        Task<DtoNarudzba> DeActivate(int narudzbaId);
         Task<DtoNarudzba> Delete(int narudzbaId);
         Task<DtoNarudzba> Cancel(int narudzbaId);
         Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct);

@@ -16,7 +16,12 @@ import '../screens/narudzbe_screen.dart';
 class MasterScreen extends StatefulWidget {
   int index;
   Widget child;
-  MasterScreen({super.key, required this.child, required this.index});
+  bool uslov;
+  MasterScreen(
+      {super.key,
+      required this.child,
+      required this.index,
+      required this.uslov});
 
   @override
   State<MasterScreen> createState() => _MasterScreenState();
@@ -35,6 +40,7 @@ class _MasterScreenState extends State<MasterScreen> {
         PageRouteBuilder(
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) => MasterScreen(
+            uslov: true,
             child: HomeScreen(),
             index: currentIndex,
           ),
@@ -45,6 +51,7 @@ class _MasterScreenState extends State<MasterScreen> {
         PageRouteBuilder(
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) => MasterScreen(
+            uslov: true,
             child: ZivotinjeScreen(),
             index: currentIndex,
           ),
@@ -55,6 +62,7 @@ class _MasterScreenState extends State<MasterScreen> {
         PageRouteBuilder(
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) => MasterScreen(
+            uslov: true,
             child: ArtikliScreen(),
             index: currentIndex,
           ),
@@ -65,6 +73,7 @@ class _MasterScreenState extends State<MasterScreen> {
         PageRouteBuilder(
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) => MasterScreen(
+            uslov: true,
             child: NarudzbeScreen(),
             index: currentIndex,
           ),
@@ -75,6 +84,7 @@ class _MasterScreenState extends State<MasterScreen> {
         PageRouteBuilder(
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) => MasterScreen(
+            uslov: true,
             child: NovostiScreen(),
             index: currentIndex,
           ),
@@ -96,47 +106,94 @@ class _MasterScreenState extends State<MasterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    transitionDuration: Duration.zero,
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        MasterScreen(
-                      child: ProfilScreen(),
-                      index: currentIndex,
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(Icons.person)),
-          SizedBox(
-            width: 10,
-          ),
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  LoginResponse.idLogiranogKorisnika = null;
-                  LoginResponse.ulogaNaziv = null;
-                  LoginResponse.token = null;
-                  NarudzbaInfo.kupacID = null;
+      appBar: widget.uslov
+          ? AppBar(
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: Duration.zero,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  MasterScreen(
+                            uslov: true,
+                            child: ProfilScreen(),
+                            index: currentIndex,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.person)),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        LoginResponse.idLogiranogKorisnika = null;
+                        LoginResponse.ulogaNaziv = null;
+                        LoginResponse.token = null;
+                        NarudzbaInfo.kupacID = null;
 
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => Scaffold(
-                              body: LoginPage2(),
-                            )),
-                  );
-                });
-              },
-              icon: Icon(Icons.logout)),
-          SizedBox(
-            width: 10,
-          )
-        ],
-      ),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => Scaffold(
+                                    body: LoginPage2(),
+                                  )),
+                        );
+                      });
+                    },
+                    icon: Icon(Icons.logout)),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            )
+          : AppBar(
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: Duration.zero,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  MasterScreen(
+                            uslov: true,
+                            child: ProfilScreen(),
+                            index: currentIndex,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.person)),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        LoginResponse.idLogiranogKorisnika = null;
+                        LoginResponse.ulogaNaziv = null;
+                        LoginResponse.token = null;
+                        NarudzbaInfo.kupacID = null;
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => Scaffold(
+                                    body: LoginPage2(),
+                                  )),
+                        );
+                      });
+                    },
+                    icon: Icon(Icons.logout)),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            ),
       //drawer: eProdajaDrawer(),
       body: SafeArea(
         child: widget.child!,

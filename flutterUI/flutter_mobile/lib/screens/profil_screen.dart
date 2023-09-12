@@ -77,6 +77,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
                                         MasterScreen(
+                                  uslov: true,
                                   child: ProfilEdit(
                                     kupacid: data.kupacId!,
                                     lokacijaid: data.lokacijaId!,

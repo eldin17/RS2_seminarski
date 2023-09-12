@@ -127,6 +127,7 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
                                               pageBuilder: (context, animation,
                                                       secondaryAnimation) =>
                                                   MasterScreen(
+                                                uslov: false,
                                                 child: CheckoutPage(
                                                   narudzba: trenutnaNarudzba,
                                                 ),
@@ -233,6 +234,7 @@ List<Widget> _narudzbeList(BuildContext context, List<Narudzba> lista,
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   MasterScreen(
+                            uslov: true,
                             child: NarudzbeDetalji(
                               narudzba: x,
                             ),
@@ -444,6 +446,7 @@ List<Widget> _zivotinjeList(BuildContext context, List<Zivotinja> lista,
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   MasterScreen(
+                            uslov: true,
                             child: ZivotinjeDetalji(
                               zivotinja: x,
                               vrsta: x.vrsta,
@@ -519,6 +522,7 @@ List<Widget> _artikliList(BuildContext context, List<NarudzbaArtikal> lista,
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   MasterScreen(
+                            uslov: true,
                             child: ArtikliDetalji(
                               artikal: x.artikal!,
                             ),

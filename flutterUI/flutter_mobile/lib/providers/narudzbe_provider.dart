@@ -396,6 +396,32 @@ class NarudzbeProvider with ChangeNotifier {
     }
   }
 
+  Future<Narudzba> deactivate(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/deactivate";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+    };
+
+    var uri = Uri.parse(url);
+
+    var response = await http.put(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = Narudzba.fromJson(data);
+
+      return result;
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
   Future<Narudzba> cancel(int id) async {
     var url = "$_baseUrl$_endpoint/$id/cancel";
 

@@ -416,6 +416,7 @@ List<Widget> _recommended(BuildContext context, List<Artikal> artikli) {
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   MasterScreen(
+                            uslov: true,
                             child: ArtikliDetalji(
                               artikal: x,
                             ),

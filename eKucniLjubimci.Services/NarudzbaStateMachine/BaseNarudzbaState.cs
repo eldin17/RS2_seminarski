@@ -95,6 +95,11 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             throw new Exception("Action Not Allowed :(");
         }
 
+        public virtual async Task<DtoNarudzba> DeActivate(int narudzbaId)
+        {
+            throw new Exception("Action Not Allowed :(");
+        }
+
         public virtual async Task<DtoNarudzba> Delete(int narudzbaId)
         {
             throw new Exception("Action Not Allowed :(");

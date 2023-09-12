@@ -435,6 +435,7 @@ class _ProfilEditState extends State<ProfilEdit> {
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
+                              uslov: true,
                               child: HomeScreen(),
                               index: 0,
                             ),

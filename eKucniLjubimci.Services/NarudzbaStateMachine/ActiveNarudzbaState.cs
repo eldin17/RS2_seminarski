@@ -151,6 +151,16 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
 
             return new StripeCustomer(createdCustomer.Name, createdCustomer.Email, createdCustomer.Id);
         }
+        public override async Task<DtoNarudzba> DeActivate(int narudzbaId)
+        {
+            var dbObj = await _context.Set<Narudzba>().FindAsync(narudzbaId);
+
+            dbObj.StateMachine = "Draft";
+
+            await _context.SaveChangesAsync();            
+
+            return _mapper.Map<DtoNarudzba>(dbObj);
+        }
 
         public override async Task<DtoNarudzba> Delete(int narudzbaId)
         {

@@ -179,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
+                              uslov: true,
                               child: ZivotinjeDetalji(
                                 zivotinja: x,
                               ),
@@ -240,6 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
+                              uslov: true,
                               child: ArtikliDetalji(
                                 artikal: x,
                               ),

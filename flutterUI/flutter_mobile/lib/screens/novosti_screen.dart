@@ -106,6 +106,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       MasterScreen(
+                                uslov: true,
                                 child: NovostiDetalji(
                                   novost: x,
                                 ),

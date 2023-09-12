@@ -291,6 +291,7 @@ class _ArtikliScreenState extends State<ArtikliScreen> {
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
+                              uslov: true,
                               child: ArtikliDetalji(
                                 artikal: x,
                               ),

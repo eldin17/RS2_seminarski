@@ -112,6 +112,13 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
             return await state.Activate(narudzbaId);
         }
 
+        public async Task<DtoNarudzba> DeActivate(int narudzbaId)
+        {
+            var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);
+            var state = _baseNarudzbaState.GetState(narudzba.StateMachine);
+            return await state.DeActivate(narudzbaId);
+        }
+
         public async Task<DtoNarudzba> Delete(int narudzbaId)
         {
             var narudzba = await _context.Narudzbe.FindAsync(narudzbaId);

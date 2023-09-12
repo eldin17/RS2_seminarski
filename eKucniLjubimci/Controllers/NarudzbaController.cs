@@ -54,6 +54,12 @@ namespace eKucniLjubimci.Controllers
             return await (_service as INarudzbaService).Activate(narudzbaId);
         }
 
+        [HttpPut("{narudzbaId}/deactivate")]
+        public virtual async Task<DtoNarudzba> DeActivate(int narudzbaId)
+        {
+            return await (_service as INarudzbaService).DeActivate(narudzbaId);
+        }
+
         [HttpPut("{narudzbaId}/delete")]
         public virtual async Task<DtoNarudzba> Delete(int narudzbaId)
         {

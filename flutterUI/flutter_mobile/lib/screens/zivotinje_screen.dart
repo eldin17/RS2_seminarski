@@ -271,6 +271,7 @@ class _ZivotinjeScreenState extends State<ZivotinjeScreen> {
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
                                     MasterScreen(
+                              uslov: true,
                               child: ZivotinjeDetalji(
                                 zivotinja: x,
                               ),

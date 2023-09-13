@@ -10,7 +10,6 @@ import 'package:flutter_mobile/providers/novosti_provider.dart';
 import 'package:flutter_mobile/providers/osoba_provider.dart';
 import 'package:flutter_mobile/providers/zivotinje_provider.dart';
 import 'package:flutter_mobile/screens/home.dart';
-import 'package:flutter_mobile/screens/registracija.dart';
 import 'package:flutter_mobile/screens/registracija_osoba.dart';
 import 'package:flutter_mobile/widgets/master_screen.dart';
 import 'package:provider/provider.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_desktop/models/search_result.dart';
 import 'package:flutter_desktop/models/zivotinja.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
-import 'package:flutter_desktop/screens/zivotinje_add.dart';
 import 'package:flutter_desktop/screens/zivotinje_add_v.dart';
 import 'package:flutter_desktop/screens/zivotinje_detalji_screen.dart';
 import 'package:flutter_desktop/util/util.dart';

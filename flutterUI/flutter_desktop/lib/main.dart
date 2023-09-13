@@ -11,7 +11,6 @@ import 'package:flutter_desktop/providers/rase_provider.dart';
 import 'package:flutter_desktop/providers/vrste_provider.dart';
 import 'package:flutter_desktop/providers/zivotinje_provider.dart';
 import 'package:flutter_desktop/screens/home_screen.dart';
-import 'package:flutter_desktop/screens/registracija.dart';
 import 'package:flutter_desktop/screens/registracija_osoba.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';

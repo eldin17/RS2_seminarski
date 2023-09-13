@@ -64,6 +64,8 @@ services:
       - RabbitMQ_UserName=testUsername
       - RabbitMQ_Password=testPassword
       - RabbitMQ_Port=5672
+    ports:
+      - 7252:7252
     networks:
       - ekucniljubimcinet
     depends_on:

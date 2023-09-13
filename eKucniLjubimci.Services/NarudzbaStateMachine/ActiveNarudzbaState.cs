@@ -57,6 +57,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         }
         public override async Task<StripePayment> StripePayment(AddStripePayment payment, int narudzbaId, CancellationToken ct)
         {
+            //funkcija samo za testiranje, nema veze sa frontend-om
             var narudzba = await _context.Narudzbe.Include(x => x.Zivotinje).Include(x=>x.Kupac).FirstOrDefaultAsync(x => x.NarudzbaId == narudzbaId);
             var kupac = await _context.Kupci.Include(x => x.Osoba).FirstOrDefaultAsync(x => x.KupacId == narudzba.KupacId);
             ChargeCreateOptions paymentOptions = new ChargeCreateOptions
@@ -120,6 +121,11 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je placena narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
             rmqMail.RabbitMQSend(message);
+                          
+            var obj = new Recommend(_context, _mapper);
+            string baseDirectory = Directory.GetCurrentDirectory();
+            string modelFilePath = Path.Combine(baseDirectory, "..", "PodaciRecommend.zip");    
+            obj.TrainFunction(modelFilePath);            
 
             return _mapper.Map<DtoNarudzba>(narudzba);
         }
@@ -140,6 +146,7 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
         //-----------------------------------------------------------------------------------------------------------------------------------------------------
         public override async Task<StripeCustomer> StripeCustomer(AddStripeCustomer customer, int narudzbaId, CancellationToken ct)
         {
+            //funkcija samo za testiranje, nema veze sa frontend-om
             CustomerCreateOptions customerOptions = new CustomerCreateOptions
             {
                 Name = customer.Name,

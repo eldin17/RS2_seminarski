@@ -117,102 +117,17 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         }
 
 
-        static MLContext mlContext = null;
-        static object isLocked = new object();
-        static ITransformer model = null;
 
-        public List<DtoArtikal> Recommend(int id)
+
+        public List<DtoArtikal> RecommendItems(int id)
         {
-            lock (isLocked)
-            {
-                mlContext = new MLContext();
+            var obj = new Recommend(_context, _mapper);
+            string baseDirectory = Directory.GetCurrentDirectory();
+            string modelFilePath = Path.Combine(baseDirectory, "..", "PodaciRecommend.zip");            
+            obj.TrainFunction(modelFilePath);            
 
-                var dataDB = _context.Narudzbe
-                    .Include(x => x.Zivotinje).ThenInclude(x => x.Slike)
-                    .Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta)
-                    .Include(x => x.NarudzbeArtikli).ThenInclude(x => x.Artikal).ThenInclude(x => x.Slike).ToList();
-
-                var data = new List<ProductEntry>();
-
-                foreach (var narudzba in dataDB)
-                {
-                    if (narudzba.Zivotinje.Count > 0 && narudzba.NarudzbeArtikli.Count > 0)
-                    {
-                        foreach (var artikal in narudzba.NarudzbeArtikli)
-                        {
-                            foreach (var zivotinja in narudzba.Zivotinje)
-                            {
-                                data.Add(new ProductEntry()
-                                {
-                                    ProductID = (uint)zivotinja.Vrsta.RasaId,
-                                    CoPurchaseProductID = (uint)artikal.ArtikalId,
-                                });
-                            }
-                        }
-                        
-                    }
-                }
-
-                var trainData = mlContext.Data.LoadFromEnumerable(data);
-
-                //STEP 3: Your data is already encoded so all you need to do is specify options for MatrxiFactorizationTrainer with a few extra hyperparameters
-                //        LossFunction, Alpa, Lambda and a few others like K and C as shown below and call the trainer.
-                MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
-                options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
-                options.MatrixRowIndexColumnName = nameof(ProductEntry.CoPurchaseProductID);
-                options.LabelColumnName = "Label";
-                options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
-                options.Alpha = 0.0051;
-                options.Lambda = 0.025;
-                // For better results use the following parameters
-                //options.NumberOfIterations = 100;
-                //options.C = 0.00001;
-
-                var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
-
-                model = est.Fit(trainData);
-            }
-
-
-            var sviArtikli = _context.Artikli.Where(x => x.StateMachine != "Deleted");
-
-            var rezultat = new List<Tuple<Artikal, float>>();
-
-            var zivotinjaFromId = _context.Zivotinje.Include(x=>x.Vrsta).FirstOrDefault(x => x.ZivotinjaId ==id);
-
-
-            foreach (var artikal in sviArtikli)
-            {
-                var predictionengine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
-                var prediction = predictionengine.Predict(
-                                         new ProductEntry()
-                                         {
-                                             ProductID = (uint)zivotinjaFromId.Vrsta.RasaId,
-                                             CoPurchaseProductID = (uint)artikal.ArtikalId
-                                         });
-
-                rezultat.Add(new Tuple<Artikal, float>(artikal, prediction.Score));
-            }
-
-            var finalRezultat = rezultat.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(2).ToList();
-
-            return _mapper.Map<List<DtoArtikal>>(finalRezultat);
+            return obj.RecommendFunction(modelFilePath, id);
         }
 
-    }
-    public class Copurchase_prediction
-    {
-        public float Score { get; set; }
-    }
-
-    public class ProductEntry
-    {
-        [KeyType(count: 50)]
-        public uint ProductID { get; set; }
-
-        [KeyType(count: 50)]
-        public uint CoPurchaseProductID { get; set; }
-
-        public float Label { get; set; }
     }
 }

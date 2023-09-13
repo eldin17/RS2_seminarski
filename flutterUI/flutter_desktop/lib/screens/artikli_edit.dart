@@ -222,6 +222,10 @@ class _ArtikliEditState extends State<ArtikliEdit> {
                               if (parsedValue == null) {
                                 return 'Cijena mora biti broj';
                               }
+                              if (value != null &&
+                                  (parsedValue > 100000 || parsedValue < 1)) {
+                                return 'Raspon 1-100000';
+                              }
                               return null;
                             },
                           ),

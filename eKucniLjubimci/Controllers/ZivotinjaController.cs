@@ -111,9 +111,9 @@ namespace eKucniLjubimci.Controllers
         }
 
         [HttpGet("{id}/recommend")]
-        public virtual List<DtoArtikal>Recommend(int id)
+        public virtual List<DtoArtikal>RecommendItems(int id)
         {
-            return (_service as IZivotinjaService).Recommend(id);
+            return (_service as IZivotinjaService).RecommendItems(id);
         }
         
     }

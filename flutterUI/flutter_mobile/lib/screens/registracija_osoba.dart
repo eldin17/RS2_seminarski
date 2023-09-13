@@ -168,18 +168,18 @@ class _RegistracijaOsobaScreenState extends State<RegistracijaOsobaScreen> {
                           });
                         } on Exception catch (e) {
                           // TODO
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("Ok"),
-                                      )
-                                    ],
-                                  ));
+                          // showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) => AlertDialog(
+                          //           title: Text("Error"),
+                          //           content: Text(e.toString()),
+                          //           actions: [
+                          //             TextButton(
+                          //               onPressed: () => Navigator.pop(context),
+                          //               child: Text("Ok"),
+                          //             )
+                          //           ],
+                          //         ));
                         }
                       }
                     : null,

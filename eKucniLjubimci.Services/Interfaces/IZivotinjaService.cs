@@ -17,6 +17,6 @@ namespace eKucniLjubimci.Services.Interfaces
 
         Task<List<string>> AllowedActions(int zivotinjaId);
         Task<DtoZivotinja> Dostupnost(int id, bool dostupnost);
-        List<DtoArtikal> Recommend(int id);
+        List<DtoArtikal> RecommendItems(int id);
     }
 }

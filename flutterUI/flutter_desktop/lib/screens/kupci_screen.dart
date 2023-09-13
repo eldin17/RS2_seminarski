@@ -47,6 +47,7 @@ class _KupciScreenState extends State<KupciScreen> {
         title: Text("Kupci"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _topPartFilters(context),
           _bottomPartData(),
@@ -61,27 +62,29 @@ class _KupciScreenState extends State<KupciScreen> {
         Container(
           child: Row(
             children: [
-              Container(
-                constraints: BoxConstraints(maxWidth: 300),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: "Narudzbe (max)",
+              Expanded(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Narudzbe (max)",
+                          ),
+                          controller: _brojNarudzbiDoController,
                         ),
-                        controller: _brojNarudzbiDoController,
                       ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: "Narudzbe (min)",
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Narudzbe (min)",
+                          ),
+                          controller: _brojNarudzbiOdController,
                         ),
-                        controller: _brojNarudzbiOdController,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -141,7 +144,7 @@ class _KupciScreenState extends State<KupciScreen> {
           height: 10,
         ),
         Container(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topRight,
           child: FilledButton(
               onPressed: () async {
                 var narudzbeDo;

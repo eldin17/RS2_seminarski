@@ -211,18 +211,18 @@ namespace eKucniLjubimci.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "Rase",
-                columns: new[] { "RasaId", "Naziv" },
+                columns: new[] { "RasaId", "Naziv", "isDeleted" },
                 values: new object[,]
                 {
-                    {1, "Pas"},
-                    {2, "Macka"},
-                    {3, "Ptica"},
-                    {4, "Riba"},
-                    {5, "Hrcak"},
-                    {6, "Kornjaca"},
-                    {7, "Zec"},
-                    {8, "Zmija"},
-                    {9, "Zamorac"},
+                    {1, "Pas",false },
+                    {2, "Macka",false },
+                    {3, "Ptica",false },
+                    {4, "Riba", false},
+                    {5, "Hrcak", false},
+                    {6, "Kornjaca", false},
+                    {7, "Zec", false},
+                    {8, "Zmija", false},
+                    {9, "Zamorac", false},
                 });
 
             migrationBuilder.InsertData(

@@ -121,11 +121,14 @@ namespace eKucniLjubimci.Services.NarudzbaStateMachine
             string message = $"\nPoruka funkcije {mappedEntity.Funkcija} \nUpravo je placena narudzba \n-Id: {mappedEntity?.NarudzbaId} \n-Id kupca: {mappedEntity?.KupacId} \n-Datum: {mappedEntity?.DatumNarudzbe}";
 
             rmqMail.RabbitMQSend(message);
-                          
-            var obj = new Recommend(_context, _mapper);
-            string baseDirectory = Directory.GetCurrentDirectory();
-            string modelFilePath = Path.Combine(baseDirectory, "..", "PodaciRecommend.zip");    
-            obj.TrainFunction(modelFilePath);            
+
+            if (narudzba.Zivotinje.Count > 0 && narudzba.NarudzbeArtikli.Count > 0)
+            {
+                var obj = new Recommend(_context, _mapper);
+                string baseDirectory = Directory.GetCurrentDirectory();
+                string modelFilePath = Path.Combine(baseDirectory, "..", "PodaciRecommend.zip");    
+                obj.TrainFunction(modelFilePath);            
+            }
 
             return _mapper.Map<DtoNarudzba>(narudzba);
         }

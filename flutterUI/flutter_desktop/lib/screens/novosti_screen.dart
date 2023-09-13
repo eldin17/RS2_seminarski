@@ -108,6 +108,26 @@ class _NovostiScreenState extends State<NovostiScreen> {
               ],
             ),
           ),
+          Tooltip(
+            message: "Očisti filtere",
+            child: TextButton(
+              onPressed: () async {
+                var data = await _novostiProvider.get();
+
+                setState(() {
+                  _naslovController.value = TextEditingValue.empty;
+                  _imeController.value = TextEditingValue.empty;
+                  _prezimeController.value = TextEditingValue.empty;
+                  _prezimeController.value = TextEditingValue.empty;
+
+                  widget.podaci = data;
+                });
+              },
+              child: Row(
+                children: [Icon(Icons.cancel_outlined)],
+              ),
+            ),
+          ),
           FilledButton(
               onPressed: () async {
                 var data = await _novostiProvider.get(filter: {

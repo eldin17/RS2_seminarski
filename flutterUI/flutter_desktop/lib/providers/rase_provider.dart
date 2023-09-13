@@ -16,6 +16,32 @@ class RaseProvider with ChangeNotifier {
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "http://localhost:7152/");
   }
+  Future<Rasa> add(Rasa obj) async {
+    var url = "$_baseUrl$_endpoint";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+      'accept': 'text/plain',
+    };
+    var uri = Uri.parse(url);
+    var objEncoded = jsonEncode(obj);
+    var body = objEncoded;
+
+    var response = await http.post(
+      uri,
+      headers: headers,
+      body: body,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return Rasa.fromJson(data);
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
 
   Future<SearchResult<Rasa>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";

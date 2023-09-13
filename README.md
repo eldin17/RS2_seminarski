@@ -39,8 +39,8 @@ Za slanje mail-ova se koristi Ethereal fake smtp servis (https://ethereal.email/
 
 Zbog lakseg testiranja jedna adresa se koristi za slanje i primanje mail poruka 
 
-Adresa: murl87@ethereal.email
+Adresa: mittie14@ethereal.email
 
-Sifra: jCf9JwZUVATxEkvv1F 
+Sifra: yKK63A7b5r6KjrxNdP 
 
 Ovo se moze promijeniti i dodatno konfigurisati kroz docker-compose.yml fajl (za potrebe testiranja moguce je promijeniti adrese ili u slucaju isteka trajanja adrese moguce je generisati novu) 

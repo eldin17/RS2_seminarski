@@ -156,7 +156,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
         public async Task<DtoNarudzba> GetTopLastMonth()
         {
-            Narudzba data = await _context.Narudzbe.Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+            Narudzba data = await _context.Narudzbe.Where(x => x.StateMachine == "Done").Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
                             .Include(x => x.Zivotinje).ThenInclude(y => y.Slike).Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta).Where(x=>x.DatumNarudzbe>DateTime.UtcNow.AddMonths(-1)).
                             OrderByDescending(x => x.TotalFinal).FirstOrDefaultAsync();
             return _mapper.Map<DtoNarudzba>(data);
@@ -164,7 +164,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
 
         public async Task<DtoNarudzba> GetTopAllTime()
         {
-            Narudzba data = await _context.Narudzbe.Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
+            Narudzba data = await _context.Narudzbe.Where(x=>x.StateMachine=="Done").Include(x => x.NarudzbeArtikli).ThenInclude(y => y.Artikal).ThenInclude(z => z.Slike)
                             .Include(x => x.Zivotinje).ThenInclude(y => y.Slike).Include(x => x.Zivotinje).ThenInclude(x => x.Vrsta).
                             OrderByDescending(x => x.TotalFinal).FirstOrDefaultAsync();
             return _mapper.Map<DtoNarudzba>(data);
@@ -173,7 +173,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         public async Task<decimal> GetTotalLastMonth()
         {
             decimal total = 0;
-            var data = await _context.Narudzbe.Where(x => x.DatumNarudzbe > DateTime.UtcNow.AddMonths(-1)).ToListAsync();
+            var data = await _context.Narudzbe.Where(x => x.StateMachine == "Done").Where(x => x.DatumNarudzbe > DateTime.UtcNow.AddMonths(-1)).ToListAsync();
             foreach (var item in data)
             {
                 total += item.TotalFinal;
@@ -184,7 +184,7 @@ namespace eKucniLjubimci.Services.InterfaceImplementations
         public async Task<decimal> GetTotalAllTime()
         {
             decimal total = 0;
-            var data = await _context.Narudzbe.ToListAsync();
+            var data = await _context.Narudzbe.Where(x => x.StateMachine == "Done").ToListAsync();
             foreach (var item in data)
             {
                 total += item.TotalFinal;

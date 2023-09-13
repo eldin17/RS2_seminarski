@@ -145,46 +145,72 @@ class _KupciScreenState extends State<KupciScreen> {
         ),
         Container(
           alignment: Alignment.topRight,
-          child: FilledButton(
-              onPressed: () async {
-                var narudzbeDo;
-                var narudzbeOd;
-                try {
-                  narudzbeDo = int.parse(_brojNarudzbiDoController.text);
-                } catch (e) {
-                  narudzbeDo = 0;
-                }
-                try {
-                  narudzbeOd = int.parse(_brojNarudzbiOdController.text);
-                } catch (e) {
-                  narudzbeOd = 0;
-                }
-                if (narudzbeDo > 0 &&
-                    narudzbeOd > 0 &&
-                    (narudzbeDo < narudzbeOd)) {
-                  setState(() {
-                    var temp = _brojNarudzbiDoController.text;
-                    _brojNarudzbiDoController.text =
-                        _brojNarudzbiOdController.text;
-                    _brojNarudzbiOdController.text = temp;
-                  });
-                  var temp = narudzbeDo;
-                  narudzbeDo = narudzbeOd;
-                  narudzbeOd = temp;
-                }
-                var data = await _kupacProvider.get(filter: {
-                  'ime': _imeController.text,
-                  'prezime': _prezimeController.text,
-                  'grad': _gradController.text,
-                  'drzava': _drzavaController.text,
-                  'brojNarudzbiDo': narudzbeDo,
-                  'brojNarudzbiOd': narudzbeOd,
-                });
-                setState(() {
-                  widget?.podaci = data;
-                });
-              },
-              child: Text("Pretraga")),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Tooltip(
+                message: "Očisti filtere",
+                child: TextButton(
+                  onPressed: () async {
+                    var data = await _kupacProvider.get();
+
+                    setState(() {
+                      _brojNarudzbiOdController.value = TextEditingValue.empty;
+                      _brojNarudzbiDoController.value = TextEditingValue.empty;
+                      _imeController.value = TextEditingValue.empty;
+                      _prezimeController.value = TextEditingValue.empty;
+                      _gradController.value = TextEditingValue.empty;
+                      _drzavaController.value = TextEditingValue.empty;
+                      widget.podaci = data;
+                    });
+                  },
+                  child: Row(
+                    children: [Icon(Icons.cancel_outlined)],
+                  ),
+                ),
+              ),
+              FilledButton(
+                  onPressed: () async {
+                    var narudzbeDo;
+                    var narudzbeOd;
+                    try {
+                      narudzbeDo = int.parse(_brojNarudzbiDoController.text);
+                    } catch (e) {
+                      narudzbeDo = 0;
+                    }
+                    try {
+                      narudzbeOd = int.parse(_brojNarudzbiOdController.text);
+                    } catch (e) {
+                      narudzbeOd = 0;
+                    }
+                    if (narudzbeDo > 0 &&
+                        narudzbeOd > 0 &&
+                        (narudzbeDo < narudzbeOd)) {
+                      setState(() {
+                        var temp = _brojNarudzbiDoController.text;
+                        _brojNarudzbiDoController.text =
+                            _brojNarudzbiOdController.text;
+                        _brojNarudzbiOdController.text = temp;
+                      });
+                      var temp = narudzbeDo;
+                      narudzbeDo = narudzbeOd;
+                      narudzbeOd = temp;
+                    }
+                    var data = await _kupacProvider.get(filter: {
+                      'ime': _imeController.text,
+                      'prezime': _prezimeController.text,
+                      'grad': _gradController.text,
+                      'drzava': _drzavaController.text,
+                      'brojNarudzbiDo': narudzbeDo,
+                      'brojNarudzbiOd': narudzbeOd,
+                    });
+                    setState(() {
+                      widget?.podaci = data;
+                    });
+                  },
+                  child: Text("Pretraga")),
+            ],
+          ),
         ),
       ],
     );
@@ -230,7 +256,7 @@ class _KupciScreenState extends State<KupciScreen> {
             const DataColumn(
               label: const Expanded(
                 child: const Text(
-                  "Broj narudzbi",
+                  "Narudzbe",
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

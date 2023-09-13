@@ -12,8 +12,8 @@ using eKucniLjubimci.Services.Database;
 namespace eKucniLjubimci.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230815112843_init")]
-    partial class init
+    [Migration("20230913121502_seed")]
+    partial class seed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -359,6 +359,9 @@ namespace eKucniLjubimci.Services.Migrations
                     b.Property<string>("Naziv")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("RasaId");
 

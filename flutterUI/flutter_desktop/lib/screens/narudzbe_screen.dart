@@ -59,7 +59,7 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                labelText: "Ime",
+                labelText: "Ime kupca",
                 prefixIcon: Icon(Icons.search),
               ),
               controller: _kupacImeController,
@@ -68,7 +68,7 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                labelText: "Prezime",
+                labelText: "Prezime kupca",
                 prefixIcon: Icon(Icons.search),
               ),
               controller: _kupacPrezimeController,
@@ -97,6 +97,26 @@ class _NarudzbeScreenState extends State<NarudzbeScreen> {
                   ),
                 ),
               ],
+            ),
+          ),
+          Tooltip(
+            message: "Očisti filtere",
+            child: TextButton(
+              onPressed: () async {
+                var data = await _narudzbeProvider.get();
+
+                setState(() {
+                  _kupacImeController.value = TextEditingValue.empty;
+                  _kupacPrezimeController.value = TextEditingValue.empty;
+                  _totalOdController.value = TextEditingValue.empty;
+                  _totalDoController.value = TextEditingValue.empty;
+
+                  widget.podaci = data;
+                });
+              },
+              child: Row(
+                children: [Icon(Icons.cancel_outlined)],
+              ),
             ),
           ),
           FilledButton(

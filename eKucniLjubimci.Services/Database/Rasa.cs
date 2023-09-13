@@ -10,6 +10,7 @@ namespace eKucniLjubimci.Services.Database
     {
         public int RasaId { get; set; }
         public string Naziv { get; set; }
+        public bool isDeleted { get; set; } = false;
         public virtual List<Vrsta> Vrste { get; set; }
     }
 }

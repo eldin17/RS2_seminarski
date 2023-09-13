@@ -17,6 +17,33 @@ class KategorijeProvider with ChangeNotifier {
         defaultValue: "http://localhost:7152/");
   }
 
+  Future<Kategorija> add(Kategorija obj) async {
+    var url = "$_baseUrl$_endpoint";
+
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${LoginResponse.token}",
+      'accept': 'text/plain',
+    };
+    var uri = Uri.parse(url);
+    var objEncoded = jsonEncode(obj);
+    var body = objEncoded;
+
+    var response = await http.post(
+      uri,
+      headers: headers,
+      body: body,
+    );
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return Kategorija.fromJson(data);
+    } else {
+      throw new Exception("Greska!");
+    }
+  }
+
   Future<SearchResult<Kategorija>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
 

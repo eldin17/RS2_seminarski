@@ -74,6 +74,9 @@ namespace eKucniLjubimci.Services
             CreateMap<Zivotinja, UpdateZivotinja>().ReverseMap();
             CreateMap<Zivotinja, rmqZivotinja>().ReverseMap();
 
+            CreateMap<Rasa, DtoRasa>().ReverseMap();
+            CreateMap<Rasa, AddRasa>().ReverseMap();
+            CreateMap<Rasa, UpdateRasa>().ReverseMap();
         }
     }
 }

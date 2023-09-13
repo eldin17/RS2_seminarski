@@ -19,9 +19,9 @@ namespace eKucniLjubimci.Services
                 User = Environment.GetEnvironmentVariable("RabbitMQ_UserName") ?? "guest",
                 Password = Environment.GetEnvironmentVariable("RabbitMQ_Password") ?? "guest",
                 Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ_Port") ?? "5672"),
-                AdressFrom = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressFrom") ?? "murl87@ethereal.email",
-                AdressTo = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressTo") ?? "murl87@ethereal.email",
-                MailPassword = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressPassword") ?? "jCf9JwZUVATxEkvv1F",
+                AdressFrom = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressFrom") ?? "mittie14@ethereal.email",
+                AdressTo = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressTo") ?? "mittie14@ethereal.email",
+                MailPassword = Environment.GetEnvironmentVariable("RabbitMQ_MailAdressPassword") ?? "yKK63A7b5r6KjrxNdP",
                 SmtpMail = Environment.GetEnvironmentVariable("RabbitMQ_MailSMTP") ?? "smtp.ethereal.email",
                 MailPort= int.Parse(Environment.GetEnvironmentVariable("RabbitMQ_MailPort") ?? "587"),
                 EmailContent =mailContent                

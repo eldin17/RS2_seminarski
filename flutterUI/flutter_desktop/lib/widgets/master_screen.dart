@@ -8,6 +8,7 @@ import 'package:flutter_desktop/screens/izvjestaji.dart';
 import 'package:flutter_desktop/screens/kupci_screen.dart';
 import 'package:flutter_desktop/screens/narudzbe_screen.dart';
 import 'package:flutter_desktop/screens/novosti_screen.dart';
+import 'package:flutter_desktop/screens/ostalo.dart';
 import 'package:provider/provider.dart';
 
 import '../models/login_response.dart';
@@ -103,6 +104,24 @@ class _MasterScreenState extends State<MasterScreen> {
                                 );
                               },
                               child: Text("Artikli")),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          width: 200,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                var obj = await _artikliProvider.get();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MasterScreen(
+                                      prikaz: OstaloScreen(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text("Ostalo")),
                         ),
                         SizedBox(
                           height: 30,

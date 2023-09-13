@@ -238,7 +238,7 @@ List<Widget> _narudzbeList(BuildContext context, List<Narudzba> lista,
                             child: NarudzbeDetalji(
                               narudzba: x,
                             ),
-                            index: 1,
+                            index: 3,
                           ),
                         ),
                       );

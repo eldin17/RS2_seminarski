@@ -26,9 +26,9 @@ services:
       - RabbitMQ_UserName=testUsername
       - RabbitMQ_Password=testPassword
       - RabbitMQ_Port=5672
-      - RabbitMQ_MailAdressFrom=murl87@ethereal.email
-      - RabbitMQ_MailAdressTo=murl87@ethereal.email
-      - RabbitMQ_MailAdressPassword=jCf9JwZUVATxEkvv1F
+      - RabbitMQ_MailAdressFrom=mittie14@ethereal.email
+      - RabbitMQ_MailAdressTo=mittie14@ethereal.email
+      - RabbitMQ_MailAdressPassword=yKK63A7b5r6KjrxNdP
       - RabbitMQ_MailSMTP=smtp.ethereal.email  
       - RabbitMQ_MailPort=587         
     ports:

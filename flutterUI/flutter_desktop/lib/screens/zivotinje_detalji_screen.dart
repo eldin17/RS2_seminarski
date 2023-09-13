@@ -164,7 +164,7 @@ Expanded _rightPart(
                             "Vrsta",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(" - ${item.vrsta?.naziv}"),
+                          Text(" - ${item.vrsta?.rasa?.naziv}"),
                         ],
                       ),
                       Row(
@@ -173,7 +173,7 @@ Expanded _rightPart(
                             "Rasa",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(" - ${item.vrsta?.rasa?.naziv}"),
+                          Text(" - ${item.vrsta?.naziv}"),
                         ],
                       ),
                       Row(
